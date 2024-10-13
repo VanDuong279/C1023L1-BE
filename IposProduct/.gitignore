@@ -35,3 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+# Bỏ qua file build output
+/build/
+
+# Bỏ qua Gradle Wrapper JAR file
+gradle/wrapper/gradle-wrapper.jar
+
+# Bỏ qua Gradle Wrapper executable scripts
+gradlew
+gradlew.bat
