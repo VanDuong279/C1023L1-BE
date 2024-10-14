@@ -1,6 +1,8 @@
     package com.example.projectc1023i1.Dto.product;
 
 import com.example.projectc1023i1.model.product.Category;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,9 +16,11 @@ import java.time.LocalDateTime;
 @Setter
 public class ProductDto implements Validator {
     private String productCode;
+    @Size(min = 1, max = 225, message = "Product name must be between 1 and 225 characters")
     private String productName;
     private double productPrice;
     private String productImgUrl;
+    @Builder.Default
     private boolean productStatus;
     private LocalDateTime createDay;
     private LocalDateTime updateDay;
