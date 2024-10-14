@@ -1,6 +1,8 @@
     package com.example.projectc1023i1.Dto.product;
 
 import com.example.projectc1023i1.model.product.Category;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ProductDto implements Validator {
+    @NotBlank(message = "productCode must be available")
     private String productCode;
     @Size(min = 1, max = 225, message = "Product name must be between 1 and 225 characters")
     private String productName;
@@ -41,6 +44,9 @@ public class ProductDto implements Validator {
             errors.rejectValue("productPrice", null, "Price is required");
         } else if (productDto.getProductPrice() <= 0){
             errors.rejectValue("productPrice", null, "Price can not less than 0 VND");
+        }
+        if (!productDto.productCode.matches("^PR-\\d+$")){
+            errors.rejectValue("productCode", null, "Follow form PR-X");
         }
     }
 }

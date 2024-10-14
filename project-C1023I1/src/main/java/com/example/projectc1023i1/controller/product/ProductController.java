@@ -6,14 +6,20 @@ import com.example.projectc1023i1.model.product.Product;
 import com.example.projectc1023i1.service.product.ICategoryService;
 import com.example.projectc1023i1.service.product.IProductService;
 import jakarta.validation.Valid;
+import lombok.Builder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.DigestException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,12 +35,16 @@ public class ProductController {
      * Hiển thị tất cả Product
      */
     @GetMapping("")
-    public ResponseEntity<List<Product>> getListProduct(){
-        List<Product> productList = productService.findAllProducts();
-        if (productList.isEmpty()){
+    public ResponseEntity<Page<Product>> getListProduct(@RequestParam(defaultValue = "0")int page,
+                                                        @RequestParam(defaultValue = "10")int size){
+        Sort sort = Sort.by("productName").ascending();
+        Pageable pageable = PageRequest.of(size, page, sort);
+//        List<Product> productList = productService.findAllProducts();
+        Page<Product> productPage = productService.findAllProducts(pageable);
+        if (productPage.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+        return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
     /**
      * Hiển thị chi tiết Product
@@ -51,12 +61,17 @@ public class ProductController {
      * Tìm kiếm theo productName
      */
     @GetMapping("/searchByProductName")
-    public ResponseEntity<List<Product>> searchByProductName(@RequestParam(required = false) String productName){
-        List<Product> productList = productService.searchByName(productName);
-        if (productList.isEmpty()){
+    public ResponseEntity<Page<Product>> searchByProductName(@RequestParam(required = false) String productName,
+                                                             @RequestParam(defaultValue = "0")int page,
+                                                             @RequestParam(defaultValue = "10")int size){
+        Sort sort = Sort.by("productName").ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+//        List<Product> productList = productService.searchByName(productName);
+        Page<Product> productPage = productService.searchByName(productName, pageable);
+        if (productPage.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+        return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
     /**
      * Tìm kiếm theo productCode
@@ -73,16 +88,21 @@ public class ProductController {
      * Tìm kiếm theo Category
      */
     @GetMapping("/searchByCategory")
-    public ResponseEntity<List<Product>> searchByCategory(@RequestParam int categoryId){
+    public ResponseEntity<Page<Product>> searchByCategory(@RequestParam int categoryId,
+                                                          @RequestParam(defaultValue = "0")int page,
+                                                          @RequestParam(defaultValue = "10")int size){
         Category category = categoryService.findCategoryById(categoryId);
         if (category == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<Product> productList = productService.searchByCategory(category);
-        if (productList.isEmpty()){
+        Sort sort = Sort.by(category.getCategoryName()).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+//        List<Product> productList = productService.searchByCategory(category);
+        Page<Product> productPage = productService.searchByCategory(category, pageable);
+        if (productPage.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+        return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
     /**
      * Thêm mới Product
