@@ -1,7 +1,9 @@
 package com.example.projectc1023i1.model.product;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +39,6 @@ public class Category {
 
     // Quan hệ One-to-Many với Product
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference // Đánh dấu bên "quản lý"
+    @JsonBackReference
     private List<Product> products;
 }

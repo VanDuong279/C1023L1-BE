@@ -47,7 +47,7 @@ public class UserDTO implements Validator {
     @Size(max = 50,message = "khong duoc qua 50 ki tu")
     private String email;
 
-    private String salary;
+    private Double salary;
 
     private Boolean isActive;
 
