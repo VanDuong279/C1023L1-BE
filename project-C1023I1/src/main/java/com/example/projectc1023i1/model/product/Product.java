@@ -52,6 +52,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore // Ngăn chặn serialization vòng lặp
     @JsonManagedReference
     private Category category;
 
