@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 public class ProductController {
     @Autowired
-    IProductService productService;
+    private IProductService productService;
     @Autowired
-    ICategoryService categoryService;
+    private ICategoryService categoryService;
     /**
      * Hiển thị tất cả Product
      */
