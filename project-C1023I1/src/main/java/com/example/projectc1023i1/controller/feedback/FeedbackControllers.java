@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/feedbacks")
 
-public class FeedbackController {
+public class FeedbackControllers {
     @Autowired
     private IFeedbackService feedbackService;
 
