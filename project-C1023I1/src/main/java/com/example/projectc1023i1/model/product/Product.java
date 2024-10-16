@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.model.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -53,6 +54,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnore // Ngăn chặn serialization vòng lặp
+    @JsonManagedReference
     private Category category;
 
 }

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 public class CategoryController {
     @Autowired
-    ICategoryService categoryService;
+   private ICategoryService categoryService;
 
     /**
      * Hiển thị tất category
