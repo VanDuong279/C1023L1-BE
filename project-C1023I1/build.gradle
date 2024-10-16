@@ -18,44 +18,31 @@ repositories {
 }
 
 dependencies {
-	//	implementation 'org.springframework.boot:spring-boot-starter-security:2.5.5'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.security:spring-security-web'
-	implementation 'org.springframework.security:spring-security-config'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-// phaanf nay lam voi emailValidation
-	implementation 'javax.validation:validation-api:2.0.1.Final'
-
-	// cai nay de gui email xac thuc
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
-	// Thêm các module khác cần thiết tại đây
-	testImplementation 'org.springframework.security:spring-security-test'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	implementation 'org.modelmapper:modelmapper:3.1.1' //
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	//---------------------PHẦN THƯ VIỆN ĐỂ LÀM VIỆC CUNGF VỚI JTOKEN----------------------------
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+// token
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.3'
-	//-------------------------------------------------------------------------------------------
-//	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
-
-
-
-
-	implementation 'org.modelmapper:modelmapper:3.1.0'// thawngf nay chinh la mapper
-
+// model mapper
+	implementation 'org.modelmapper:modelmapper:3.1.1'
+// security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-web'
+	implementation 'org.springframework.security:spring-security-config'
+// email xac thuc
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {
