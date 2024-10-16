@@ -146,8 +146,8 @@ public class LoginController {
      *         tra ve (404) neu khong tim thay thong tin nguoi dung
      *         tra ve (200) neu da luu vao trong database bang check-email
      */
-    @PostMapping("/email/check-email")
-    public ResponseEntity<?> checkEmail(@RequestParam("email") String email) {
+    @PostMapping("/email/check-email/{email}")
+    public ResponseEntity<?> checkEmail(@PathVariable("email") String email) {
         if (userService.exitsEmail(email)) {
             Integer code = emailSenderService.sendSimpleMail(email);
             if (code!=0) {
