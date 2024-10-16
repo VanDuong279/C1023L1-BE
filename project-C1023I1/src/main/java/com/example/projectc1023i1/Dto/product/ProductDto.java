@@ -20,7 +20,6 @@ public class ProductDto implements Validator {
     private String productName;
     private double productPrice;
     private String productImgUrl;
-    @Builder.Default
     private boolean productStatus;
     private LocalDateTime createDay;
     private LocalDateTime updateDay;

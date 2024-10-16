@@ -8,8 +8,11 @@ import com.example.projectc1023i1.repository.IRoleRepo;
 import com.example.projectc1023i1.repository.IUserRepo;
 import com.example.projectc1023i1.service.user.IUserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -194,6 +197,48 @@ public class UserService implements IUserService {
         return userRepo.findByNumberphone(phone).get();
     }
 
+    @Override
+    public Page<Users> findAll(Pageable pageable) {
+//        return  userRepo.findAll(pageable);;
+        return null;
+    }
 
+    @Override
+    public Users findById(Integer id) {
+        return userRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public Users save(UserDTO userDTO, Integer id) {
+        Users user;
+        if (id == null) {
+            user = new Users(); // Thêm mới
+//            user.setCreatedAt(new java.util.Date());   // cai nay khong can thiet
+        } else {
+            user = userRepo.findById(id).orElse(null); // Cập nhật
+            if (user != null) {
+//                user.setUpdatedAt(new java.util.Date()); // cai nay khong can thiet
+            }
+        }
+
+        if (user != null) {
+            BeanUtils.copyProperties(userDTO, user, "userId", "creatAt");
+            Roles role = roleRepo.findById(userDTO.getRoleId()).orElse(null);
+            user.setRole(role);
+            return userRepo.save(user);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void delete(Integer id) {
+        userRepo.deleteById(id);
+    }
+
+    @Override
+    public Page<Users> searchUsers(String useName, String fullName, String numberPhone, Pageable pageable) {
+        return userRepo.searchUsers(useName, fullName, numberPhone, pageable);
+    }
 }
 

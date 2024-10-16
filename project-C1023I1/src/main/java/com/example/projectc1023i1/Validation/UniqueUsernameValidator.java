@@ -1,6 +1,5 @@
 package com.example.projectc1023i1.Validation;
 
-import com.example.projectc1023i1.repository.product.UserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;

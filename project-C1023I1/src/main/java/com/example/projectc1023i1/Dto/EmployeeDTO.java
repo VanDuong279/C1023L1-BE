@@ -1,27 +1,19 @@
-package com.example.projectc1023i1.Dto.product;
+package com.example.projectc1023i1.Dto;
 
 import com.example.projectc1023i1.Validation.SalaryMultiple;
 import com.example.projectc1023i1.Validation.UniqueUsername;
+import lombok.*;
+import org.springframework.validation.Validator;
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
-
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class UserDTO {
-    @NotBlank(message = "Tên nhân viên không được để trống")
-    private String fullName;
+@AllArgsConstructor
+@Builder
+public class EmployeeDTO extends UserDTO implements Validator {
 
-    @NotBlank(message = "Số điện thoại không được để trống")
-    private String numberPhone;
-
-    private String imgUrl;
-    private Date birthday;
-    private String email;
     @NotNull(message = "Mức lương không được để trống")
     @Positive(message = "Lương phải lớn hơn 0")
     @SalaryMultiple // Kiểm tra bội số của 100.000
@@ -29,7 +21,8 @@ public class UserDTO {
 
     @NotBlank(message = "Địa chỉ không được để trống")
     private String address;
-    private Boolean isActive;
+
+
 
     @NotBlank(message = "Tên đăng nhập không được để trống")
     @Size(min = 6, message = "Tên đăng nhập phải lớn hơn 6 ký tự")
@@ -38,6 +31,4 @@ public class UserDTO {
     @UniqueUsername // Annotation kiểm tra tên đăng nhập duy nhất
     private String userName;
 
-    private String password;
-    private Integer roleId;
 }

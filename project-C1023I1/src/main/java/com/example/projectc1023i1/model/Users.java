@@ -29,7 +29,10 @@ public class Users implements UserDetails { // ddaay laf class lay ra thong tin 
     private String imgUrl;
 
     @Column(name = "salary")
-    private String salary;
+    private Double salary;
+
+    @Column(name = "gender")
+    private Boolean gender;
 
     @Column(name = "numberphone")
     private String numberphone;
