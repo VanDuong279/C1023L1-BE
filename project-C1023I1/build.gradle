@@ -51,16 +51,10 @@ dependencies {
 	//-------------------------------------------------------------------------------------------
 //	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 
-	// làm việc việc với quản lý tin nhắn mỗi khi tin gửi tin nhắn hóa và mỗi khi nó null
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-	// đây chính là phần làm việc với google và facebook
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	// xác thực tin nhắn
+
+
 	implementation 'org.modelmapper:modelmapper:3.1.0'// thawngf nay chinh la mapper
-//	implementation 'com.twilio:twilio:8.30.1'
 
 }
 
