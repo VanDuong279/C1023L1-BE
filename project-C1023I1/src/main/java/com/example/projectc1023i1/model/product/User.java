@@ -31,7 +31,7 @@ public class User {
     @Column(name = "img_url",nullable = true)
     private String imgUrl;
     @Column(name = "gen_der",nullable = true)
-    private String gender;
+    private Boolean gender;
     @Column(name = "birthday",nullable = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date birthday;

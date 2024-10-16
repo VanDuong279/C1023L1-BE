@@ -30,7 +30,6 @@ public class UserDTO {
     @NotBlank(message = "Địa chỉ không được để trống")
     private String address;
     private Boolean isActive;
-
     @NotBlank(message = "Tên đăng nhập không được để trống")
     @Size(min = 6, message = "Tên đăng nhập phải lớn hơn 6 ký tự")
     @Pattern(regexp = "^(?!admin|root)[a-zA-Z][a-zA-Z0-9]*$",

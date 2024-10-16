@@ -11,7 +11,7 @@ import org.springframework.validation.Validator;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
+//@NoArgsConstructor
 @Getter
 @Setter
 public class ProductDto implements Validator {
@@ -42,5 +42,8 @@ public class ProductDto implements Validator {
         } else if (productDto.getProductPrice() <= 0){
             errors.rejectValue("productPrice", null, "Price can not less than 0 VND");
         }
+    }
+
+    public ProductDto() {
     }
 }
