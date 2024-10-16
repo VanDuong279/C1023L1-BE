@@ -148,18 +148,18 @@ public class LoginController {
      */
     @PostMapping("/email/check-email")
     public ResponseEntity<?> checkEmail(@RequestParam("email") String email) {
-        if (userService.exitsEmail(email)) {
+        if (!userService.exitsEmail(email)) {
             Integer code = emailSenderService.sendSimpleMail(email);
             if (code!=0) {
                 String checkCode = String.valueOf(code);
                 sendCodeService.save(new SendCodeDTO(checkCode,email));
-                return ResponseEntity.ok("ddax hoan thanh");
+                return ResponseEntity.ok("da hoan thanh");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(Collections.singletonMap("errors",false));
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay email nguoi dung");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("nguoi dung  da ton tai trong he thong");
 
     }
 
