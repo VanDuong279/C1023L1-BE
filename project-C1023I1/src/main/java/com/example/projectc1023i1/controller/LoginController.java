@@ -272,4 +272,9 @@ public class LoginController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay email");
     }
+
+    @GetMapping("/hello")
+    public ResponseEntity<?> hello() {
+        return ResponseEntity.status(HttpStatus.OK).body("hello");
+    }
 }
