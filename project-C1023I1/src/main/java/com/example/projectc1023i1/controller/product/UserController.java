@@ -22,8 +22,9 @@ public class UserController {
     private IUserService userService;
     /**
      * Hiển thị tất cả User
+     * xuan da them /pagination vi getAllUsers trung voi getAllUsers cua duong
      */
-    @GetMapping
+    @GetMapping("/pagination")
     public ResponseEntity<Page<Users>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -86,8 +87,9 @@ public class UserController {
 
 
 
-//    ===============================DUOWNG=======================
-    @GetMapping
+//    ===============================DUOWNG===========
+//    ============con 1 phan nua nhung da trung voi code hau o phia tren la  getAllUsers
+    @GetMapping("")
     public ResponseEntity<List<Users>> getAllUsers() {
         List<Users> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
