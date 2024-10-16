@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
@@ -33,7 +35,7 @@ public class UserController {
      * lấy thông tin dựa trên id
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Users> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<Users> getUserById(@PathVariable("id") Integer id) {
         Users user = userService.findById(id);
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -81,4 +83,15 @@ public class UserController {
         Page<Users> users = userService.searchUsers(userName, fullName, numberPhone, pageable);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+
+
+//    ===============================DUOWNG=======================
+    @GetMapping
+    public ResponseEntity<List<Users>> getAllUsers() {
+        List<Users> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+
 }

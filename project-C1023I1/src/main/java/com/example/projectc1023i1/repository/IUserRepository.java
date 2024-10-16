@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.Optional;
 
-public interface IUserRepo extends CrudRepository<Users, Integer> {
+public interface IUserRepository extends CrudRepository<Users, Integer> {
     boolean existsByUsername(String username); // hafm kiem tra tai khoan co ton tai hay khong
     boolean existsByEmail(String email);
     boolean existsByNumberphone(String numberphone);

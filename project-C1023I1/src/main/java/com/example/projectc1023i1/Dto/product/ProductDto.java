@@ -1,18 +1,17 @@
     package com.example.projectc1023i1.Dto.product;
-
     import com.example.projectc1023i1.model.product.Category;
     import jakarta.validation.constraints.NotBlank;
     import jakarta.validation.constraints.Size;
-    import lombok.Builder;
-    import lombok.Getter;
-    import lombok.NoArgsConstructor;
-    import lombok.Setter;
+    import lombok.*;
     import org.springframework.validation.Errors;
     import org.springframework.validation.Validator;
     import java.time.LocalDateTime;
+
+    @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     @Setter
+    @Builder
     public class ProductDto implements Validator {
         @NotBlank(message = "productCode must be available")
         private String productCode;
@@ -26,25 +25,6 @@
         private Category category;
 
 
-<<<<<<< HEAD
-@NoArgsConstructor
-@Getter
-@Setter
-public class ProductDto implements Validator {
-    private String productCode;
-    @Size(min = 1, max = 225, message = "Product name must be between 1 and 225 characters")
-    private String productName;
-    private double productPrice;
-    private String productImgUrl;
-    private boolean productStatus;
-    private LocalDateTime createDay;
-    private LocalDateTime updateDay;
-    private Category category;
-
-    @Override
-=======
-        @Override
->>>>>>> 2e7f06471122072006ca0aebe870cd07a87e749f
     public boolean supports(Class<?> clazz) {
         return false;
     }

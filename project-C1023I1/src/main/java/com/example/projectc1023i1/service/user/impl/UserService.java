@@ -5,7 +5,7 @@ import com.example.projectc1023i1.component.JwtTokenUtils;
 import com.example.projectc1023i1.model.Roles;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.repository.IRoleRepo;
-import com.example.projectc1023i1.repository.IUserRepo;
+import com.example.projectc1023i1.repository.IUserRepository;
 import com.example.projectc1023i1.service.user.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -21,12 +21,13 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
     @Autowired
-    private IUserRepo userRepo;
+    private IUserRepository userRepo;
     @Autowired
     private IRoleRepo roleRepo;
     @Autowired
@@ -239,6 +240,16 @@ public class UserService implements IUserService {
     @Override
     public Page<Users> searchUsers(String useName, String fullName, String numberPhone, Pageable pageable) {
         return userRepo.searchUsers(useName, fullName, numberPhone, pageable);
+    }
+
+    @Override
+    public List<Users> getAllUsers() {
+        return (List<Users>) userRepo.findAll();
+    }
+
+    @Override
+    public Users getUserById(Integer userId) {
+         return userRepo.findById(userId).orElse(null);
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.model.feedback;
 
+import com.example.projectc1023i1.model.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

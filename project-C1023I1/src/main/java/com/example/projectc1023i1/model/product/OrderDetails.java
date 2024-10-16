@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.model.product;
 
+import com.example.projectc1023i1.model.Users;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -41,7 +42,7 @@ public class OrderDetails {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users user;
 
     // Getters và Setters cho tất cả các thuộc tính
 
@@ -125,11 +126,11 @@ public class OrderDetails {
         this.table = table;
     }
 
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 }
