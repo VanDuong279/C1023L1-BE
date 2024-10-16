@@ -88,10 +88,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     org.modelmapper.internal.Pair.of("/api/user/register","POST"),
                     org.modelmapper.internal.Pair.of("/api/v1/some-resource","GET"),
                     org.modelmapper.internal.Pair.of("/api/email/validate-email","POST"),
-                    org.modelmapper.internal.Pair.of("/api/email/check-email","GET"),
+                    org.modelmapper.internal.Pair.of("/api/email/check-email","POST"),
                     org.modelmapper.internal.Pair.of("/api/email/check-code","POST"),
-                    org.modelmapper.internal.Pair.of("/api/check-exist-username","POST"),
-                    org.modelmapper.internal.Pair.of("/api/check-exist-numberphone","POST"),
                     org.modelmapper.internal.Pair.of("/api/email/check-exist-email","POST"),
                     org.modelmapper.internal.Pair.of("/api/email/send-code-email","POST"),
                     org.modelmapper.internal.Pair.of("/api/user/change-password","POST")
