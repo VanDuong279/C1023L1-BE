@@ -43,14 +43,19 @@ public class WebSercurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
                 .csrf(AbstractHttpConfigurer:: disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request   -> {
                     request.requestMatchers(
-                                    "**")
+                                    "/api/user/register","/api/user/register",
+                                    "/api/email/validate-email", "/api/email/check-email",
+                                    "/api/email/check-exist-email","/api/email/send-code-email",
+                                    "/api/user/change-password","/api/user/forgot-password")
 
                             .permitAll()
                             .requestMatchers(POST,"/api/hello").hasAnyRole(Roles.USER)
+
                             .requestMatchers(DELETE,"/api/product/**").hasRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(POST,"/api/product/**").hasAnyRole(Roles.ADMIN)
