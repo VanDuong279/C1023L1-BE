@@ -60,7 +60,7 @@ public class UserService implements IUserService {
 
         Date birthday = (Date) userDTO.getBirthday();
         users.setIsActive(true);
-        Roles roles = roleRepo.findByRoleId(1);
+        Roles roles = roleRepo.findByRoleId(userDTO.getRoleId());
         if (roles != null) {
             users.setRole(roles);
         }else  {

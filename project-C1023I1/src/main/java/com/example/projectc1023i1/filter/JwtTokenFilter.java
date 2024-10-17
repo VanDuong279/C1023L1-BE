@@ -51,9 +51,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
 
-            final String authenticate =request.getHeader("Authorization");
-            if (authenticate != null && authenticate.startsWith("Bearer ")) {
+            final String authenticate = request.getHeader("Authorization");
+            if (authenticate == null || !authenticate.startsWith("Bearer ")) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                return; // Kết thúc xử lý ngay khi lỗi
             }
 
             final String token = authenticate.substring(7); // lay doan ma token tu chi so 7 den het chuoi
@@ -71,6 +72,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"unAuthorized");
+            return;
         }
     }
 
@@ -92,7 +94,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     org.modelmapper.internal.Pair.of("/api/email/check-email","POST"),
                     org.modelmapper.internal.Pair.of("/api/email/check-exist-email","POST"),
                     org.modelmapper.internal.Pair.of("/api/email/send-code-email","POST"),
-                    org.modelmapper.internal.Pair.of("/api/user/change-password","POST")
+                    org.modelmapper.internal.Pair.of("/api/user/change-password","POST"),
+                    org.modelmapper.internal.Pair.of("/api/category","GET"),
+                    org.modelmapper.internal.Pair.of("/api/product","GET"),
+                    org.modelmapper.internal.Pair.of("/api/product/detail","GET"),
+                    org.modelmapper.internal.Pair.of("/api/product/searchByProductName","GET"),
+                    org.modelmapper.internal.Pair.of("/api/product/searchByCategory","GET")
+
             );
 
                 for (Pair<String, String > token : bypassTokens) {
