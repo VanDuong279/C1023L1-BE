@@ -20,7 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableMethodSecurity
@@ -51,6 +51,15 @@ public class WebSercurityConfig {
 
                             .permitAll()
                             .requestMatchers(POST,"/api/hello").hasAnyRole(Roles.USER)
+                            .requestMatchers(DELETE,"/api/product/**").hasRole(Roles.ADMIN)
+                            .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(POST,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(PUT,"/api/product/**").hasAnyRole(Roles.ADMIN)
+
+                            .requestMatchers(GET,"/api/users/**").hasRole(Roles.ADMIN)
+                            .requestMatchers(DELETE,"/api/users/**").hasRole(Roles.ADMIN)
+                            .requestMatchers(POST,"/api/users/**").hasRole(Roles.ADMIN)
+                            .requestMatchers(PUT,"/api/users/**").hasRole(Roles.ADMIN)
                             .anyRequest().authenticated()
                     ;
                 })
