@@ -1,13 +1,13 @@
 package com.example.projectc1023i1.Validation;
 
-import com.example.projectc1023i1.repository.product.UserRepository;
+import com.example.projectc1023i1.repository.IUserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername,String> {
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
     @Override
     public void initialize(UniqueUsername constrainAnnotation){}
 
@@ -16,6 +16,6 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
         if (userRepository==null){
             return true;
         }
-        return !userRepository.existsByUserName(userName);
+        return !userRepository.existsByUsername(userName);
     }
 }

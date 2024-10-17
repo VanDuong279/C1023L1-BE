@@ -17,18 +17,13 @@ import java.sql.Date;
 @Builder
 public class UserDTO implements Validator {
 
-//    @NotBlank(message = "Khong duoc de trong")
-//    private String imgUrl;
 
-//    @Min(value = 0,message = "Khong duoc nho hon 0")
-//    @NotEmpty(message = "Luong khong duoc de trong")
-//    private String salary;
+    private  String url;
 
     @NotBlank(message = "Khonng duoc de trong ten")
     @Size(max = 50,message = "khong duoc qua 50 ki tu")
     private String fullName;
 
-    @Size(max = 70,message = "khong duoc qua 70 ki tu")
     private String address;
 
     @DateTimeFormat(pattern = "yyyy/MM/dd")
@@ -39,7 +34,7 @@ public class UserDTO implements Validator {
     private String numberphone;
 
     @NotBlank(message = "Khong duoc de trong")
-    @Size(min = 3, max = 50, message = "Ten nguoi dung phai co do dai tu 3 den 20 ky tu")
+    @Size(min = 6, message = "Tên đăng nhập phải lớn hơn 6 ký tự")
     private String username;
 
     @NotBlank(message = "Khong duoc de trong password")
@@ -52,10 +47,11 @@ public class UserDTO implements Validator {
     @Size(max = 50,message = "khong duoc qua 50 ki tu")
     private String email;
 
+    private Double salary;
 
+    private Boolean isActive;
 
-
-
+    private Integer roleId;
 
 
     @Override
@@ -65,6 +61,6 @@ public class UserDTO implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-
     }
+
 }

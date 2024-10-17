@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.model.product;
 
+import com.example.projectc1023i1.model.Roles;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -55,5 +56,5 @@ public class User {
     private String password;
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    private Role role;
+    private Roles role;
 }

@@ -9,6 +9,7 @@ import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtils {
-    @org.springframework.beans.factory.annotation.Value("${jwt.expiration}")
+    @Value("${jwt.expiration}")
     private int expiration;
 
     @Value("${jwt.secretKey}")

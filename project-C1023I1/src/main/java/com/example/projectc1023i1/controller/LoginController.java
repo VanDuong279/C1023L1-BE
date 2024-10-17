@@ -98,6 +98,9 @@ public class LoginController {
             @RequestParam("passwordChange") String passwordChange
     ) {
         Users users = userService.findByUsername(username).get();
+        if (users ==null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Khong tim thay nguoi dung");
+        }
         users.setPassword(passwordChange);
         String token = userService.updatePassword(users);
         return ResponseEntity.ok(UserRespone.builder()
@@ -129,6 +132,14 @@ public class LoginController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMesssage);
             }
 
+            if (userService.exitsEmail(userDTO.getEmail())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan email nay da ton tai");
+            }else if (userService.checkUsername(userDTO.getUsername())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan  nay da ton tai");
+            }else if (userService.checkNumberphone(userDTO.getNumberphone())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("So dien thoai nay da ton tai");
+            }
+
             userService.createUser(userDTO);
             return ResponseEntity.ok().body(UserRespone.builder()
                     .userDTO(userDTO)
@@ -148,18 +159,18 @@ public class LoginController {
      */
     @PostMapping("/email/check-email")
     public ResponseEntity<?> checkEmail(@RequestParam("email") String email) {
-        if (userService.exitsEmail(email)) {
+        if (!userService.exitsEmail(email)) {
             Integer code = emailSenderService.sendSimpleMail(email);
             if (code!=0) {
                 String checkCode = String.valueOf(code);
                 sendCodeService.save(new SendCodeDTO(checkCode,email));
-                return ResponseEntity.ok("ddax hoan thanh");
+                return ResponseEntity.ok("da hoan thanh");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(Collections.singletonMap("errors",false));
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay email nguoi dung");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("nguoi dung  da ton tai trong he thong");
 
     }
 
@@ -271,5 +282,11 @@ public class LoginController {
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay email");
+    }
+
+    @PostMapping("/hello")
+    public ResponseEntity<?> hello(@RequestParam("id") Integer id) {
+        int a = 10;
+        return ResponseEntity.status(HttpStatus.OK).body("hello");
     }
 }

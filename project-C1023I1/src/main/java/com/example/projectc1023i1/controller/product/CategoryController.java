@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/category")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class CategoryController {
     @Autowired
-    ICategoryService categoryService;
+   private ICategoryService categoryService;
 
     /**
      * Hiển thị tất category

@@ -1,6 +1,8 @@
 package com.example.projectc1023i1.repository;
 
 import com.example.projectc1023i1.model.Users;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -10,12 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.Optional;
 
-public interface IUserRepo extends CrudRepository<Users, Integer> {
+public interface IUserRepository extends CrudRepository<Users, Integer> {
     boolean existsByUsername(String username); // hafm kiem tra tai khoan co ton tai hay khong
     boolean existsByEmail(String email);
     boolean existsByNumberphone(String numberphone);
 
-    Optional<Users> findByUsername(String username);
+
+    @Query(value = "SELECT * FROM users WHERE user_name = :username", nativeQuery = true)
+    Optional<Users> findByUsername(@Param("username") String username);
     Optional<Users> findByNumberphone(String numberphone);
     @Modifying
     @Transactional
@@ -31,6 +35,19 @@ public interface IUserRepo extends CrudRepository<Users, Integer> {
                @Param("birthday") Date birthday,
                @Param("isActive") boolean isActive,
                @Param("roleId") int roleId);
+
+
+
+
+    @Query("SELECT u FROM Users u WHERE " +
+            "(:userName IS NULL OR LOWER(u.username) LIKE LOWER(CONCAT('%', :userName, '%'))) AND " +
+            "(:fullName IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :fullName, '%'))) AND " +
+            "(:numberPhone IS NULL OR u.numberphone LIKE CONCAT('%', :numberPhone, '%'))")
+    Page<Users> searchUsers(
+            @Param("userName") String userName,
+            @Param("fullName") String fullName,
+            @Param("numberPhone") String numberPhone,
+            Pageable pageable);
 
 
 }
