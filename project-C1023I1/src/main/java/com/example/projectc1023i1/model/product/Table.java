@@ -14,7 +14,7 @@ public class Table {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "table_id")
-    private int id;
+    private Integer id;
 
     @Column(name = "table_code")
     private String code;

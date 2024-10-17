@@ -23,7 +23,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtils {
-    @org.springframework.beans.factory.annotation.Value("${jwt.expiration}")
+    @Value("${jwt.expiration}")
     private int expiration;
 
     @Value("${jwt.secretKey}")
