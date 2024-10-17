@@ -17,7 +17,9 @@ public interface IUserRepository extends CrudRepository<Users, Integer> {
     boolean existsByEmail(String email);
     boolean existsByNumberphone(String numberphone);
 
-    Optional<Users> findByUsername(String username);
+
+    @Query(value = "SELECT * FROM users WHERE user_name = :username", nativeQuery = true)
+    Optional<Users> findByUsername(@Param("username") String username);
     Optional<Users> findByNumberphone(String numberphone);
     @Modifying
     @Transactional
