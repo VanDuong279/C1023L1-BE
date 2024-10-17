@@ -95,7 +95,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     org.modelmapper.internal.Pair.of("/api/user/change-password","POST")
             );
 
-            for (Pair<String, String > token : bypassTokens) {
+                for (Pair<String, String > token : bypassTokens) {
                 if (request.getServletPath().contains(token.getLeft())
                         && request.getMethod().equals(token.getRight())) {
                     return true;
