@@ -54,8 +54,7 @@ public class WebSercurityConfig {
                                     "/api/user/change-password","/api/user/forgot-password")
 
                             .permitAll()
-                            .requestMatchers(POST,"/api/hello").hasRole(Roles.USER)
-
+                            .requestMatchers(POST,"/api/storage/hello").hasRole(Roles.USER.toUpperCase())
                             .requestMatchers(DELETE,"/api/product/**").hasRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(POST,"/api/product/**").hasAnyRole(Roles.ADMIN)
@@ -65,8 +64,9 @@ public class WebSercurityConfig {
                             .requestMatchers(DELETE,"/api/users/**").hasRole(Roles.ADMIN)
                             .requestMatchers(POST,"/api/users/**").hasRole(Roles.ADMIN)
                             .requestMatchers(PUT,"/api/users/**").hasRole(Roles.ADMIN)
+                            .requestMatchers(GET,"/api/users/hello").hasRole(Roles.ADMIN)
 
-                            .requestMatchers(POST,"http://localhost:8080/api/orders").hasRole(Roles.USER)
+                            .requestMatchers(POST,"/api/orders").hasRole(Roles.USER)
                             .anyRequest().authenticated()
                     ;
                 })

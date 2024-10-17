@@ -91,9 +91,9 @@ public class JwtTokenUtils {
 
     // kiểm tra xem token này có hợp lệ hay khoong
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String phoneNumber = extractUserName(token);
+        final String userName = extractUserName(token);
         Users users = null;
-        // kiểm tra xem số điện thoại đem làm account có trùng không và xem thử token nó có còn hạn hay không
-        return (phoneNumber.equals(userDetails.getUsername()) && !isTokenExpired(token,users));
+        // kiểm tra xem username đem làm account có trùng không và xem thử token nó có còn hạn hay không
+        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token,users));
     }
 }
