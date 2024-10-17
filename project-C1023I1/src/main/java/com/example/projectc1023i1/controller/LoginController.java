@@ -275,6 +275,7 @@ public class LoginController {
 
     @PostMapping("/hello")
     public ResponseEntity<?> hello() {
+        int a = 10;
         return ResponseEntity.status(HttpStatus.OK).body("hello");
     }
 }
