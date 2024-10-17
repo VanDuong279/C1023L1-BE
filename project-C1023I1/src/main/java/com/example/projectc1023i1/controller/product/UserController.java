@@ -95,5 +95,10 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/hello")
+    public ResponseEntity<?> hello() {
+        return ResponseEntity.ok("Hello World");
+    }
+
 
 }
