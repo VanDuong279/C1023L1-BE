@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.config;
 
 import com.example.projectc1023i1.filter.JwtTokenFilter;
+import com.example.projectc1023i1.model.Roles;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @EnableMethodSecurity
@@ -47,6 +50,7 @@ public class WebSercurityConfig {
                                     "**")
 
                             .permitAll()
+                            .requestMatchers(POST,"/api/hello").hasAnyRole(Roles.USER)
                             .anyRequest().authenticated()
                     ;
                 })
