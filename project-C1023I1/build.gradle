@@ -30,7 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
-	runtimeOnly 'org.springframework.boot:spring-boot-starter-tomcat'
+//	runtimeOnly 'org.springframework.boot:spring-boot-starter-tomcat'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 // token

@@ -48,13 +48,13 @@ public class WebSercurityConfig {
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request   -> {
                     request.requestMatchers(
-                                    "/api/user/register","/api/user/register",
+                                    "/api/user/register","/api/login",
                                     "/api/email/validate-email", "/api/email/check-email",
                                     "/api/email/check-exist-email","/api/email/send-code-email",
                                     "/api/user/change-password","/api/user/forgot-password")
 
                             .permitAll()
-                            .requestMatchers(POST,"/api/hello").hasAnyRole(Roles.USER)
+                            .requestMatchers(POST,"/api/hello").hasRole(Roles.USER)
 
                             .requestMatchers(DELETE,"/api/product/**").hasRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
@@ -65,6 +65,8 @@ public class WebSercurityConfig {
                             .requestMatchers(DELETE,"/api/users/**").hasRole(Roles.ADMIN)
                             .requestMatchers(POST,"/api/users/**").hasRole(Roles.ADMIN)
                             .requestMatchers(PUT,"/api/users/**").hasRole(Roles.ADMIN)
+
+                            .requestMatchers(POST,"http://localhost:8080/api/orders").hasRole(Roles.USER)
                             .anyRequest().authenticated()
                     ;
                 })
