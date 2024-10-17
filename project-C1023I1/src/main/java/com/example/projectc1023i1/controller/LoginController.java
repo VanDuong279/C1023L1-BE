@@ -98,6 +98,9 @@ public class LoginController {
             @RequestParam("passwordChange") String passwordChange
     ) {
         Users users = userService.findByUsername(username).get();
+        if (users ==null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Khong tim thay nguoi dung");
+        }
         users.setPassword(passwordChange);
         String token = userService.updatePassword(users);
         return ResponseEntity.ok(UserRespone.builder()
@@ -127,6 +130,14 @@ public class LoginController {
                         map(FieldError:: getDefaultMessage)
                         .toList();
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMesssage);
+            }
+
+            if (userService.exitsEmail(userDTO.getEmail())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan email nay da ton tai");
+            }else if (userService.checkUsername(userDTO.getUsername())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan  nay da ton tai");
+            }else if (userService.checkNumberphone(userDTO.getNumberphone())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("So dien thoai nay da ton tai");
             }
 
             userService.createUser(userDTO);

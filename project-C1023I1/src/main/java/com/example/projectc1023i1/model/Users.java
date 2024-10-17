@@ -23,7 +23,7 @@ public class Users implements UserDetails { // ddaay laf class lay ra thong tin 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Integer userId;
 
     @Column(name = "img_url")
     private String imgUrl;
