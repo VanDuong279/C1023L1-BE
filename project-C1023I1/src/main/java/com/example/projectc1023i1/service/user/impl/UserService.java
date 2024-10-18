@@ -201,8 +201,7 @@ public class UserService implements IUserService {
 
     @Override
     public Page<Users> findAll(Pageable pageable) {
-//        return  userRepo.findAll(pageable);;
-        return null;
+        return  userRepo.findAll(pageable);
     }
 
     @Override
