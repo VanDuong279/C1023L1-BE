@@ -13,4 +13,5 @@ public interface IFeedbackService {
     public Feedback getFeedbackById(Integer feedbackId);
 
     public Page<Feedback> getFeedbackByDayCreate(Date date, int page, int size);
+    void save(Feedback feedback);
 }
