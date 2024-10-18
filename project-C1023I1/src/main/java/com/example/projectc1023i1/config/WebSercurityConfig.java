@@ -47,7 +47,7 @@ public class WebSercurityConfig {
 
                 .csrf(AbstractHttpConfigurer:: disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(request   -> {
+                .authorizeHttpRequests((request)   -> {
                     request.requestMatchers(
                                     "/api/email-exits-check","/api/numberphone-exits-check",
                                     "/api/username-exits-check", "/api/product/searchByCategory",
@@ -59,25 +59,26 @@ public class WebSercurityConfig {
                                     "/api/user/register","/api/login")
 
                             .permitAll()
-
-                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(Roles.ADMIN)
+                            // phaan quyen cho user
                             .requestMatchers(POST,"/api/users/**").hasAnyRole(Roles.ADMIN)
-                            .requestMatchers(DELETE,"/api/users/**").hasRole(Roles.ADMIN)
+                            .requestMatchers(DELETE,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(GET,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(PUT,"/api/users/**").hasAnyRole(Roles.ADMIN)
 
-
-                            .requestMatchers(POST,"/api/product/**").hasRole(Roles.ADMIN)
-                            .requestMatchers(POST,"api/category/**").hasAnyRole(Roles.ADMIN)
-                            .requestMatchers(DELETE,"/api/product/deleteProduct").hasRole(Roles.ADMIN)
+                            // phan quyen cho product
+                            .requestMatchers(POST,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(PATCH,"/api/product/**").hasAnyRole(Roles.ADMIN)
 
+                            // phan quyen cho orders
                             .requestMatchers(POST,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(DELETE,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(GET,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(PUT,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
 
+                            // phan quyen cho feedback
+                            
                             .anyRequest().authenticated()
                     ;
                 })
