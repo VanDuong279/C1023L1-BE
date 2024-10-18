@@ -1,16 +1,16 @@
     package com.example.projectc1023i1.Dto.product;
-
     import com.example.projectc1023i1.model.product.Category;
-    import com.example.projectc1023i1.service.product.IProductService;
+    import com.example.projectc1023i1.model.product.Product;
     import jakarta.validation.constraints.NotBlank;
     import jakarta.validation.constraints.Size;
     import lombok.Getter;
     import lombok.NoArgsConstructor;
     import lombok.Setter;
-    import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.validation.Errors;
     import org.springframework.validation.Validator;
     import java.time.LocalDateTime;
+    import java.util.List;
+
     @NoArgsConstructor
     @Getter
     @Setter
@@ -26,12 +26,10 @@
         private LocalDateTime updateDay;
         private Category category;
 
-        private IProductService productService;
+        private boolean isUpdate = false;
 
-        @Autowired
-        public void setProductService(IProductService productService){
-            this.productService = productService;
-        }
+        private List<Product> productList;
+
 
         @Override
         public boolean supports(Class<?> clazz) {
@@ -41,12 +39,16 @@
         @Override
         public void validate(Object target, Errors errors) {
             ProductDto productDto = (ProductDto) target;
+
             // Kiểm tra productName
             if (productDto.getProductName() == null || productDto.getProductName().trim().isEmpty()) {
                 errors.rejectValue("productName", null, "Product name must not be empty");
-            }else {
-                // Kiểm tra tính duy nhất, bỏ qua khi cập nhật
-                if (productService != null && productService.existProductName(productDto.getProductName())) {
+            }
+            // Kiểm tra tính duy nhất trong danh sách productList
+            if (!productDto.isUpdate()){
+                boolean isNameExisted = productDto.getProductList().stream()
+                        .anyMatch(product -> product.getProductName().equalsIgnoreCase(productDto.getProductName()));
+                if (isNameExisted) {
                     errors.rejectValue("productName", null, "Product name already existed");
                 }
             }

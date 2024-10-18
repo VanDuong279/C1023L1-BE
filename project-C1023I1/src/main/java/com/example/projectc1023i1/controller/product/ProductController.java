@@ -1,13 +1,10 @@
 package com.example.projectc1023i1.controller.product;
-
 import com.example.projectc1023i1.Dto.product.ProductDto;
-import com.example.projectc1023i1.Dto.product.UpdateProductDto;
 import com.example.projectc1023i1.model.product.Category;
 import com.example.projectc1023i1.model.product.Product;
 import com.example.projectc1023i1.service.product.ICategoryService;
 import com.example.projectc1023i1.service.product.IProductService;
 import jakarta.validation.Valid;
-import lombok.Builder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -18,11 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.DigestException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +35,6 @@ public class ProductController {
                                                         @RequestParam(defaultValue = "10")int size){
         Sort sort = Sort.by("productName").ascending();
         Pageable pageable = PageRequest.of(page,size, sort);
-//        List<Product> productList = productService.findAllProducts();
         Page<Product> productPage = productService.findAllProducts(pageable);
         if (productPage.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -52,7 +44,7 @@ public class ProductController {
     /**
      * Hiển thị chi tiết Product
      */
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getProductById(@PathVariable int id){
         Product product = productService.findProductById(id);
         if (product == null){
@@ -69,7 +61,6 @@ public class ProductController {
                                                              @RequestParam(defaultValue = "10")int size){
         Sort sort = Sort.by("productName").ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
-//        List<Product> productList = productService.searchByName(productName);
         Page<Product> productPage = productService.searchByName(productName, pageable);
         if (productPage.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -100,7 +91,6 @@ public class ProductController {
         }
         Sort sort = Sort.by(category.getCategoryName()).ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
-//        List<Product> productList = productService.searchByCategory(category);
         Page<Product> productPage = productService.searchByCategory(category, pageable);
         if (productPage.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -109,29 +99,12 @@ public class ProductController {
     }
 
     /**
-     * Mỗi khi có request đến phải sử dụng validate đã thiết lập
-     * @param binder
-     */
-    @InitBinder("productDto")
-    protected void initBinderCreate(WebDataBinder binder) {
-        ProductDto productDto = new ProductDto();
-        productDto.setProductService(productService); // Gán ProductService
-        binder.setValidator(productDto);
-    }
-    /**
-     * Mỗi khi có request đến phải sử dụng validate đã thiết lập
-     * @param binder
-     */
-    @InitBinder("updateProductDto")
-    protected void initBinderUpdate(WebDataBinder binder) {
-        UpdateProductDto updateProductDto = new UpdateProductDto();
-        binder.setValidator(updateProductDto);
-    }
-    /**
      * Thêm mới Product
      */
-    @PostMapping("/createProduct")
+    @PostMapping("")
     public ResponseEntity<Object> addProduct(@Valid @RequestBody ProductDto productDto, BindingResult bindingResult){
+        productDto.setProductList(productService.findAllProducts());
+       new ProductDto().validate(productDto, bindingResult);
         if (bindingResult.hasErrors()){
             List<String> errors = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -146,8 +119,10 @@ public class ProductController {
     /**
      * Chỉnh sửa Product
      */
-    @PatchMapping("/editProduct/{id}")
-    public ResponseEntity<Object> editProduct(@PathVariable int id, @Valid @RequestBody UpdateProductDto updateProductDto, BindingResult bindingResult){
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> editProduct(@PathVariable int id, @Valid @RequestBody ProductDto productDto, BindingResult bindingResult){
+        productDto.setUpdate(true);
+        new ProductDto().validate(productDto, bindingResult);
         Product existProduct = productService.findProductById(id);
         if (existProduct == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -158,14 +133,14 @@ public class ProductController {
                     .collect(Collectors.toList());
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        BeanUtils.copyProperties(updateProductDto, existProduct);
+        BeanUtils.copyProperties(productDto, existProduct);
         productService.saveProduct(existProduct);
         return new ResponseEntity<>(existProduct, HttpStatus.OK);
     }
     /**
      * Xoá Product
      */
-    @DeleteMapping("deleteProduct/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable int id){
         Product product = productService.findProductById(id);
         if (product == null){

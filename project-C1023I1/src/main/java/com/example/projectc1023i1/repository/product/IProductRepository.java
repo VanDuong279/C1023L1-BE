@@ -1,5 +1,4 @@
 package com.example.projectc1023i1.repository.product;
-
 import com.example.projectc1023i1.model.product.Category;
 import com.example.projectc1023i1.model.product.Product;
 import org.springframework.data.domain.Page;
