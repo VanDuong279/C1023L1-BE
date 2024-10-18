@@ -5,11 +5,14 @@ import com.example.projectc1023i1.component.JwtTokenUtils;
 import com.example.projectc1023i1.model.Roles;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.repository.IRoleRepo;
-import com.example.projectc1023i1.repository.IUserRepo;
+import com.example.projectc1023i1.repository.IUserRepository;
 import com.example.projectc1023i1.service.user.IUserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,12 +21,13 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
     @Autowired
-    private IUserRepo userRepo;
+    private IUserRepository userRepo;
     @Autowired
     private IRoleRepo roleRepo;
     @Autowired
@@ -56,7 +60,7 @@ public class UserService implements IUserService {
 
         Date birthday = (Date) userDTO.getBirthday();
         users.setIsActive(true);
-        Roles roles = roleRepo.findByRoleId(1);
+        Roles roles = roleRepo.findByRoleId(userDTO.getRoleId());
         if (roles != null) {
             users.setRole(roles);
         }else  {
@@ -94,7 +98,7 @@ public class UserService implements IUserService {
             throw new DataIntegrityViolationException("mat khau bi sai");// kiem tra mat khau
         }
 
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, password,userExist.getAuthorities());
         // tao token chua thong tin nguoi dung va mat khau xac thuc
         authenticationManager.authenticate(auth); // xac thuc nguoi dung neu dung la co trong database se tra ve
         // thanh cong neu khong se nem ra ngoai le
@@ -163,6 +167,7 @@ public class UserService implements IUserService {
      */
     @Override
     public Optional<Users> findByUsername(String username) {
+
         return userRepo.findByUsername(username);
     }
 
@@ -194,6 +199,58 @@ public class UserService implements IUserService {
         return userRepo.findByNumberphone(phone).get();
     }
 
+    @Override
+    public Page<Users> findAll(Pageable pageable) {
+//        return  userRepo.findAll(pageable);;
+        return null;
+    }
 
+    @Override
+    public Users findById(Integer id) {
+        return userRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public Users save(UserDTO userDTO, Integer id) {
+        Users user;
+        if (id == null) {
+            user = new Users(); // Thêm mới
+//            user.setCreatedAt(new java.util.Date());   // cai nay khong can thiet
+        } else {
+            user = userRepo.findById(id).orElse(null); // Cập nhật
+            if (user != null) {
+//                user.setUpdatedAt(new java.util.Date()); // cai nay khong can thiet
+            }
+        }
+
+        if (user != null) {
+            BeanUtils.copyProperties(userDTO, user, "userId", "creatAt");
+            Roles role = roleRepo.findById(userDTO.getRoleId()).orElse(null);
+            user.setRole(role);
+            return userRepo.save(user);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void delete(Integer id) {
+        userRepo.deleteById(id);
+    }
+
+    @Override
+    public Page<Users> searchUsers(String useName, String fullName, String numberPhone, Pageable pageable) {
+        return userRepo.searchUsers(useName, fullName, numberPhone, pageable);
+    }
+
+    @Override
+    public List<Users> getAllUsers() {
+        return (List<Users>) userRepo.findAll();
+    }
+
+    @Override
+    public Users getUserById(Integer userId) {
+         return userRepo.findById(userId).orElse(null);
+    }
 }
 

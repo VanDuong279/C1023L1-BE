@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.model.product;
 
+import com.example.projectc1023i1.model.Users;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 
@@ -11,7 +12,7 @@ public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int feedbackId;
+    private Integer feedbackId;
 
     @Column(nullable = false, length = 10)
     private String feedbackCode;
@@ -33,7 +34,7 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users user;
 
     public int getFeedbackId() {
         return feedbackId;
@@ -91,11 +92,11 @@ public class Feedback {
         this.status = status;
     }
 
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 }

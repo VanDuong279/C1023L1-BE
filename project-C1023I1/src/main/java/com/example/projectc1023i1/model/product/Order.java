@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.model.product;
 
+import com.example.projectc1023i1.model.Users;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderId;
+    private Integer orderId;
 
     @Column(nullable = false)
     private LocalDateTime dayCreate;
@@ -31,7 +32,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users user;
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
@@ -61,7 +62,7 @@ public class Order {
         this.table = table;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 }

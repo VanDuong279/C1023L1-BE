@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/category")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class CategoryController {
     @Autowired
    private ICategoryService categoryService;
@@ -80,5 +80,10 @@ public class CategoryController {
         }
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/hello")
+    public ResponseEntity<?> hello () {
+        return new ResponseEntity<>("Hello World!", HttpStatus.OK);
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class OrderDetailsController {
 
     @Autowired
@@ -114,6 +114,11 @@ public class OrderDetailsController {
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Lỗi khi gửi thông báo.");
         }
+    }
+
+    @PostMapping("/hello")
+    public ResponseEntity<?> hello () {
+        return ResponseEntity.ok("Hello World");
     }
 }
 

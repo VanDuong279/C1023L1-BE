@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/product")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class ProductController {
     @Autowired
     private IProductService productService;
@@ -151,4 +151,6 @@ public class ProductController {
         productService.deleteProduct(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
+
+
 }
