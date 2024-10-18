@@ -34,6 +34,7 @@ public class CategoryDto implements Validator {
         if (categoryDto.getCategoryName().equals("")){
             errors.rejectValue("categoryName", null, "Not empty");
         }
+
         // Kiểm tra tính duy nhât
         if (!categoryDto.isUpdate()){
             boolean isNameExisted = categoryDto.getCategoryList().stream()
@@ -43,6 +44,7 @@ public class CategoryDto implements Validator {
             }
         }
         // Kiểm tra regex code
+
         if (!categoryDto.getCategoryCode().matches("^C-\\d+$")){
             errors.rejectValue("categoryCode", null, "Follow form C-X");
         }

@@ -25,9 +25,7 @@
         private LocalDateTime createDay;
         private LocalDateTime updateDay;
         private Category category;
-
         private boolean isUpdate = false;
-
         private List<Product> productList;
 
 
@@ -61,6 +59,7 @@
             // Kiểm tra productCode
             if (productDto.getProductCode() == null || !productDto.getProductCode().matches("^PR-\\d+$")) {
                 errors.rejectValue("productCode", null, "Product code must follow the format PR-X");
+
             }
         }
 
