@@ -21,6 +21,7 @@ public interface IUserRepository extends CrudRepository<Users, Integer> {
     @Query(value = "SELECT * FROM users WHERE user_name = :username", nativeQuery = true)
     Optional<Users> findByUsername(@Param("username") String username);
     Optional<Users> findByNumberphone(String numberphone);
+    Optional<Users> findByEmail(String email);
     @Modifying
     @Transactional
     @Query(value = "insert into users (full_name, address, numberphone, email, user_name, `password`, birthday, is_active, role_id) " +

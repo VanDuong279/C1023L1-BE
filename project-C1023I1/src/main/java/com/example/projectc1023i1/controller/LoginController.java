@@ -134,9 +134,9 @@ public class LoginController {
 
             if (userService.exitsEmail(userDTO.getEmail())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan email nay da ton tai");
-            }else if (userService.checkUsername(userDTO.getUsername())) {
+            }else if (userService.exitsUsername(userDTO.getUsername())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan  nay da ton tai");
-            }else if (userService.checkNumberphone(userDTO.getNumberphone())) {
+            }else if (userService.exitsNumberphone(userDTO.getNumberphone())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("So dien thoai nay da ton tai");
             }
 
@@ -197,14 +197,6 @@ public class LoginController {
                         .toList();
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("errors",errorsMesssage));
             }
-
-            if (userService.exitsEmail(userDTO.getEmail())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan email nay da ton tai");
-            }else if (userService.checkUsername(userDTO.getUsername())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan  nay da ton tai");
-            }else if (userService.checkNumberphone(userDTO.getNumberphone())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("So dien thoai nay da ton tai");
-            }
             Integer code = emailSenderService.sendSimpleMail(userDTO.getEmail());
             if (code!=0) {
                 String checkCode = String.valueOf(code);
@@ -257,15 +249,37 @@ public class LoginController {
 
 
 
-    @GetMapping()
+    @PostMapping("/username-exits-check")
+    public ResponseEntity<?> findAccountByUsername(@RequestParam("username") String username) {
+        try {
+            if (userService.exitsUsername(username)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("usernameExist");
+            }
+            return ResponseEntity.ok().body("Let's continue");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ban chua nhap so dien thoai");
+        }
+    }
+
+    @PostMapping("/email-exits-check/{id}")
+    public ResponseEntity<?> findAccountByEmail(@RequestParam("email") String email) {
+        try {
+            if (userService.exitsEmail(email)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("emailExist ");
+            }
+            return ResponseEntity.ok().body("Let's continue ");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ban chua nhap so dien thoai");
+        }
+    }
+
+    @PostMapping("/numberphone-exits-check")
     public ResponseEntity<?> findAccountByNumberPhone(@RequestParam("numberphone") String numberphone) {
         try {
-            if (userService.findByPhone(numberphone) == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("accountNotExist",false));
+            if (userService.exitsNumberphone(numberphone)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("numberphoneExist ");
             }
-            Users user = userService.findByPhone(numberphone);
-            UserDTO userDTO = userService.ConverDTO(user);
-            return ResponseEntity.ok().body(userDTO);
+            return ResponseEntity.ok().body("Lets continue ");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ban chua nhap so dien thoai");
         }
