@@ -32,4 +32,9 @@ public class CategoryService implements ICategoryService {
     public void deleteCategory(int id) {
         categoryRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existByCategoryName(String categoryName) {
+        return categoryRepository.existsCategoryByCategoryName(categoryName);
+    }
 }

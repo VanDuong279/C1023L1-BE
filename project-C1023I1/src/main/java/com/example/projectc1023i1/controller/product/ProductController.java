@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.controller.product;
 
 import com.example.projectc1023i1.Dto.product.ProductDto;
+import com.example.projectc1023i1.Dto.product.UpdateProductDto;
 import com.example.projectc1023i1.model.product.Category;
 import com.example.projectc1023i1.model.product.Product;
 import com.example.projectc1023i1.service.product.ICategoryService;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.DigestException;
@@ -38,7 +41,7 @@ public class ProductController {
     public ResponseEntity<Page<Product>> getListProduct(@RequestParam(defaultValue = "0")int page,
                                                         @RequestParam(defaultValue = "10")int size){
         Sort sort = Sort.by("productName").ascending();
-        Pageable pageable = PageRequest.of(size, page, sort);
+        Pageable pageable = PageRequest.of(page,size, sort);
 //        List<Product> productList = productService.findAllProducts();
         Page<Product> productPage = productService.findAllProducts(pageable);
         if (productPage.isEmpty()){
@@ -104,6 +107,26 @@ public class ProductController {
         }
         return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
+
+    /**
+     * Mỗi khi có request đến phải sử dụng validate đã thiết lập
+     * @param binder
+     */
+    @InitBinder("productDto")
+    protected void initBinderCreate(WebDataBinder binder) {
+        ProductDto productDto = new ProductDto();
+        productDto.setProductService(productService); // Gán ProductService
+        binder.setValidator(productDto);
+    }
+    /**
+     * Mỗi khi có request đến phải sử dụng validate đã thiết lập
+     * @param binder
+     */
+    @InitBinder("updateProductDto")
+    protected void initBinderUpdate(WebDataBinder binder) {
+        UpdateProductDto updateProductDto = new UpdateProductDto();
+        binder.setValidator(updateProductDto);
+    }
     /**
      * Thêm mới Product
      */
@@ -124,7 +147,7 @@ public class ProductController {
      * Chỉnh sửa Product
      */
     @PatchMapping("/editProduct/{id}")
-    public ResponseEntity<Object> editProduct(@PathVariable int id, @Valid @RequestBody ProductDto productDto, BindingResult bindingResult){
+    public ResponseEntity<Object> editProduct(@PathVariable int id, @Valid @RequestBody UpdateProductDto updateProductDto, BindingResult bindingResult){
         Product existProduct = productService.findProductById(id);
         if (existProduct == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -135,7 +158,7 @@ public class ProductController {
                     .collect(Collectors.toList());
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        BeanUtils.copyProperties(productDto, existProduct);
+        BeanUtils.copyProperties(updateProductDto, existProduct);
         productService.saveProduct(existProduct);
         return new ResponseEntity<>(existProduct, HttpStatus.OK);
     }

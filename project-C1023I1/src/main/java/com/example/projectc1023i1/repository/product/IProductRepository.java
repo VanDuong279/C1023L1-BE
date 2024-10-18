@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IProductRepository extends JpaRepository<Product, Integer> {
+    boolean existsProductByProductName(String productName);
     Page<Product> findAll(Pageable pageable);
     List<Product> findProductsByProductNameContaining(String productName);
     Page<Product> findProductsByProductNameContaining(String productName, Pageable pageable);

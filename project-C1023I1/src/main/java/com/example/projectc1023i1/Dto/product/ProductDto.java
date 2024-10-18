@@ -1,12 +1,13 @@
     package com.example.projectc1023i1.Dto.product;
 
     import com.example.projectc1023i1.model.product.Category;
+    import com.example.projectc1023i1.service.product.IProductService;
     import jakarta.validation.constraints.NotBlank;
     import jakarta.validation.constraints.Size;
-    import lombok.Builder;
     import lombok.Getter;
     import lombok.NoArgsConstructor;
     import lombok.Setter;
+    import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.validation.Errors;
     import org.springframework.validation.Validator;
     import java.time.LocalDateTime;
@@ -16,7 +17,7 @@
     public class ProductDto implements Validator {
         @NotBlank(message = "productCode must be available")
         private String productCode;
-        @Size(min = 1, max = 225, message = "Product name must be between 1 and 225 characters")
+        @Size(min = 3, message = "Product name must be at least 3 characters")
         private String productName;
         private double productPrice;
         private String productImgUrl;
@@ -25,24 +26,40 @@
         private LocalDateTime updateDay;
         private Category category;
 
+        private IProductService productService;
+
+        @Autowired
+        public void setProductService(IProductService productService){
+            this.productService = productService;
+        }
+
         @Override
         public boolean supports(Class<?> clazz) {
-            return false;
+            return ProductDto.class.equals(clazz); // Sửa trả về true khi ProductDto được kiểm tra
         }
 
         @Override
         public void validate(Object target, Errors errors) {
             ProductDto productDto = (ProductDto) target;
-            if (productDto.getProductName().equals("")){
-                errors.rejectValue("productName", null, "Not empty");
+            // Kiểm tra productName
+            if (productDto.getProductName() == null || productDto.getProductName().trim().isEmpty()) {
+                errors.rejectValue("productName", null, "Product name must not be empty");
+            }else {
+                // Kiểm tra tính duy nhất, bỏ qua khi cập nhật
+                if (productService != null && productService.existProductName(productDto.getProductName())) {
+                    errors.rejectValue("productName", null, "Product name already existed");
+                }
             }
-            if (productDto.getProductPrice() == -1.0){
-                errors.rejectValue("productPrice", null, "Price is required");
-            } else if (productDto.getProductPrice() <= 0){
-                errors.rejectValue("productPrice", null, "Price can not less than 0 VND");
+
+            // Kiểm tra productPrice
+            if (productDto.getProductPrice() <= 0) {
+                errors.rejectValue("productPrice", null, "Price must be greater than 0 VND");
             }
-            if (!productDto.productCode.matches("^PR-\\d+$")){
-                errors.rejectValue("productCode", null, "Follow form PR-X");
+
+            // Kiểm tra productCode
+            if (productDto.getProductCode() == null || !productDto.getProductCode().matches("^PR-\\d+$")) {
+                errors.rejectValue("productCode", null, "Product code must follow the format PR-X");
             }
         }
+
     }

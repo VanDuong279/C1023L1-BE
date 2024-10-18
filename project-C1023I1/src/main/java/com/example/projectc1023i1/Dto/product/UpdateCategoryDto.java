@@ -13,38 +13,27 @@ import org.springframework.validation.Validator;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CategoryDto implements Validator {
+public class UpdateCategoryDto implements Validator {
     @NotBlank(message = "categoryCode must be available")
     private String categoryCode;
     @Size(min = 3, message = "Category name must be at least 3 characters")
     private String categoryName;
     private String categoryImgUrl;
 
-    private ICategoryService categoryService;
-
-    @Autowired
-    public void setCategoryService(ICategoryService categoryService){
-        this.categoryService = categoryService;
-    }
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return CategoryDto.class.equals(clazz);
+        return UpdateCategoryDto.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        CategoryDto categoryDto = (CategoryDto) target;
+        UpdateCategoryDto updateCategoryDto = (UpdateCategoryDto) target;
         // Kiểm tra name
-        if (categoryDto.getCategoryName().equals("")){
+        if (updateCategoryDto.getCategoryName().equals("")){
             errors.rejectValue("categoryName", null, "Not empty");
-        } else {
-            // Kiểm tra tính duy nhất
-            if (categoryService != null && categoryService.existByCategoryName(categoryDto.getCategoryName())){
-                errors.rejectValue("categoryName", null, "Category name already existed");
-            }
         }
-        if (!categoryDto.getCategoryCode().matches("^C-\\d+$")){
+        if (!updateCategoryDto.getCategoryCode().matches("^C-\\d+$")){
             errors.rejectValue("categoryCode", null, "Follow form C-X");
         }
     }

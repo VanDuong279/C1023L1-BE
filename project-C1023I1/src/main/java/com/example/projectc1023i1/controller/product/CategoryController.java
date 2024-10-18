@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.controller.product;
 
 import com.example.projectc1023i1.Dto.product.CategoryDto;
+import com.example.projectc1023i1.Dto.product.UpdateCategoryDto;
 import com.example.projectc1023i1.model.product.Category;
 import com.example.projectc1023i1.service.product.ICategoryService;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +37,25 @@ public class CategoryController {
         return new ResponseEntity<>(categoryList, HttpStatus.OK);
     }
     /**
+     * Mỗi khi có request đến phải sử dụng validate đã thiết lập
+     * @param binder
+     */
+    @InitBinder("categoryDto")
+    protected void initBinderCreate(WebDataBinder binder) {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setCategoryService(categoryService); // Gán CategoryService
+        binder.setValidator(categoryDto);
+    }
+    /**
+     * Mỗi khi có request đến phải sử dụng validate đã thiết lập
+     * @param binder
+     */
+    @InitBinder("updateCategoryDto")
+    protected void initBinderUpdate(WebDataBinder binder) {
+        UpdateCategoryDto updateCategoryDto = new UpdateCategoryDto();
+        binder.setValidator(updateCategoryDto);
+    }
+    /**
      * Thêm mới category
      */
     @PostMapping("/createCategory")
@@ -54,7 +75,7 @@ public class CategoryController {
      * Chỉnh sửa category
      */
     @PatchMapping("/editCategory/{id}")
-    public ResponseEntity<Object> editCategory(@PathVariable int id, @Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult){
+    public ResponseEntity<Object> editCategory(@PathVariable int id, @Valid @RequestBody UpdateCategoryDto updateCategoryDto, BindingResult bindingResult){
         Category existCategory = categoryService.findCategoryById(id);
         if (existCategory == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -65,7 +86,7 @@ public class CategoryController {
                     .collect(Collectors.toList());
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        BeanUtils.copyProperties(categoryDto, existCategory);
+        BeanUtils.copyProperties(updateCategoryDto, existCategory);
         categoryService.saveCategory(existCategory);
         return new ResponseEntity<>(existCategory, HttpStatus.OK);
     }

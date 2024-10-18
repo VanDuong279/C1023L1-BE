@@ -9,4 +9,5 @@ public interface ICategoryService {
     Category findCategoryById(int id);
     void saveCategory(Category category);
     void deleteCategory(int id);
+    boolean existByCategoryName(String categoryName);
 }

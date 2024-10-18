@@ -18,4 +18,5 @@ public interface IProductService {
     Page<Product> searchByCategory(Category category, Pageable pageable);
     void saveProduct(Product product);
     void deleteProduct(int id);
+    boolean existProductName(String productName);
 }

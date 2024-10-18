@@ -72,4 +72,9 @@ public class ProductService implements IProductService {
     public void deleteProduct(int id) {
         productRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existProductName(String productName) {
+        return productRepository.existsProductByProductName(productName);
+    }
 }
