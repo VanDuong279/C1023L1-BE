@@ -284,8 +284,8 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay email");
     }
 
-    @PostMapping("/hello")
-    public ResponseEntity<?> hello(@RequestParam("id") Integer id) {
+    @PostMapping("/storage/hello/{id}")
+    public ResponseEntity<?> hello(@Valid @RequestParam("id") Integer id) {
         int a = 10;
         return ResponseEntity.status(HttpStatus.OK).body("hello");
     }
