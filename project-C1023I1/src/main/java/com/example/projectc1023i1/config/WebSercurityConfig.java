@@ -5,6 +5,7 @@ import com.example.projectc1023i1.model.Roles;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -48,25 +49,27 @@ public class WebSercurityConfig {
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request   -> {
                     request.requestMatchers(
-                                    "/api/user/register","/api/login",
-                                    "/api/email/validate-email", "/api/email/check-email",
-                                    "/api/email/check-exist-email","/api/email/send-code-email",
-                                    "/api/user/change-password","/api/user/forgot-password")
+                                    "**")
 
                             .permitAll()
-                            .requestMatchers(POST,"/api/hello").hasRole(Roles.USER)
+                            .requestMatchers(POST,"/api/product/product/**").hasAnyRole(Roles.ADMIN,Roles.USER)
 
-                            .requestMatchers(DELETE,"/api/product/**").hasRole(Roles.ADMIN)
-                            .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(POST,"/api/users/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(DELETE,"/api/users/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(GET,"/api/users/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(PUT,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(POST,"/api/product/**").hasAnyRole(Roles.ADMIN)
-                            .requestMatchers(PUT,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(POST,"api/category/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(PATCH,"/api/product/**").hasAnyRole(Roles.ADMIN)
 
-                            .requestMatchers(GET,"/api/users/**").hasRole(Roles.ADMIN)
-                            .requestMatchers(DELETE,"/api/users/**").hasRole(Roles.ADMIN)
-                            .requestMatchers(POST,"/api/users/**").hasRole(Roles.ADMIN)
-                            .requestMatchers(PUT,"/api/users/**").hasRole(Roles.ADMIN)
+                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(DELETE,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(GET,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(PUT,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
 
-                            .requestMatchers(POST,"http://localhost:8080/api/orders").hasRole(Roles.USER)
                             .anyRequest().authenticated()
                     ;
                 })
@@ -90,7 +93,7 @@ public class WebSercurityConfig {
                 httpSecurityCorsConfigurer.configurationSource(source); // áp dụng cấu hình để bỏ vào httpSecurityCorsConfigurer
             }
         }) ;
-        return http.build();
+            return http.build();
     }
 
 

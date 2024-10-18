@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+
 @Service
 public class FeedbackService implements IFeedbackService {
     @Autowired
@@ -30,4 +31,10 @@ public class FeedbackService implements IFeedbackService {
         Pageable pageable = PageRequest.of(page, size);
         return feedbackRepository.findByCreationDate(date, pageable);
     }
+
+    @Override
+    public void save(Feedback feedback) {
+        feedbackRepository.save(feedback);
+    }
+
 }

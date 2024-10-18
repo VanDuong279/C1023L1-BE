@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.component;
 
 import com.example.projectc1023i1.model.Users;
+import com.example.projectc1023i1.repository.IUserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,6 +9,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +30,9 @@ public class JwtTokenUtils {
 
     @Value("${jwt.secretKey}")
     private String secret;
+
+    @Autowired
+    private IUserRepository userRepository;
 
 
     public String generateToken(Users user) {
@@ -91,9 +96,9 @@ public class JwtTokenUtils {
 
     // kiểm tra xem token này có hợp lệ hay khoong
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String phoneNumber = extractUserName(token);
-        Users users = null;
+        final String userName = extractUserName(token);
+        Users users = userRepository.findByUsername(userName).get();
         // kiểm tra xem số điện thoại đem làm account có trùng không và xem thử token nó có còn hạn hay không
-        return (phoneNumber.equals(userDetails.getUsername()) && !isTokenExpired(token,users));
+        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token,users));
     }
 }

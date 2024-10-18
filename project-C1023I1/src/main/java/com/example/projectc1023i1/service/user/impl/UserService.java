@@ -60,7 +60,7 @@ public class UserService implements IUserService {
 
         Date birthday = (Date) userDTO.getBirthday();
         users.setIsActive(true);
-        Roles roles = roleRepo.findByRoleId(1);
+        Roles roles = roleRepo.findByRoleId(userDTO.getRoleId());
         if (roles != null) {
             users.setRole(roles);
         }else  {
@@ -98,7 +98,7 @@ public class UserService implements IUserService {
             throw new DataIntegrityViolationException("mat khau bi sai");// kiem tra mat khau
         }
 
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, password,userExist.getAuthorities());
         // tao token chua thong tin nguoi dung va mat khau xac thuc
         authenticationManager.authenticate(auth); // xac thuc nguoi dung neu dung la co trong database se tra ve
         // thanh cong neu khong se nem ra ngoai le
