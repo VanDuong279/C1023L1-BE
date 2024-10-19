@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.controller.product;
 
+import com.example.projectc1023i1.Dto.EmployeeDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.service.user.IUserService;
@@ -48,21 +49,23 @@ public class UserController {
      * Thêm mới 1 user
      */
     @PostMapping
-    public ResponseEntity<Users> createUser(@RequestBody UserDTO userDTO) {
-        Users createdUser = userService.save(userDTO, null); // id là null cho tạo mới
+    public ResponseEntity<Users> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        Users createdUser = userService.save(employeeDTO, null); // id là null cho tạo mới
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
+
     /**
-     * chỉnh sửa thông tin user
+     * update 1 user
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Users> updateUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
-        Users updatedUser = userService.save(userDTO, id); // Sử dụng phương thức save cho cập nhật
+    public ResponseEntity<Users> updateEmployee(@PathVariable Integer id, @RequestBody EmployeeDTO employeeDTO) {
+        Users updatedUser = userService.save(employeeDTO, id); // Sử dụng phương thức save cho cập nhật
         if (updatedUser != null) {
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
     /**
      * xóa 1 user dựa trên id
      */

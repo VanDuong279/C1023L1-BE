@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.service.user.impl;
 
+import com.example.projectc1023i1.Dto.EmployeeDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.component.JwtTokenUtils;
 import com.example.projectc1023i1.model.Roles;
@@ -210,27 +211,54 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Users save(UserDTO userDTO, Integer id) {
-        Users user;
-        if (id == null) {
-            user = new Users(); // Thêm mới
-//            user.setCreatedAt(new java.util.Date());   // cai nay khong can thiet
-        } else {
-            user = userRepo.findById(id).orElse(null); // Cập nhật
-            if (user != null) {
-//                user.setUpdatedAt(new java.util.Date()); // cai nay khong can thiet
+    public Users save(EmployeeDTO employeeDTO, Integer id) {
+        Users users;
+
+        // Nếu id != null, thì tìm kiếm user có sẵn để cập nhật, ngược lại tạo mới.
+        if (id != null) {
+            users = userRepo.findById(id).orElse(null);  // Tìm người dùng theo id
+            if (users == null) {
+                throw new RuntimeException("User với id này không tồn tại");
             }
+        } else {
+            users = new Users(); // Thêm mới
         }
 
-        if (user != null) {
-            BeanUtils.copyProperties(userDTO, user, "userId", "creatAt");
-            Roles role = roleRepo.findById(userDTO.getRoleId()).orElse(null);
-            user.setRole(role);
-            return userRepo.save(user);
+        // Gán các thuộc tính từ EmployeeDTO sang Users
+        users.setFullName(employeeDTO.getFullName() != null ? employeeDTO.getFullName() : "");
+        users.setAddress(employeeDTO.getAddress() != null ? employeeDTO.getAddress() : "");
+        users.setEmail(employeeDTO.getEmail());
+        users.setNumberphone(employeeDTO.getNumberphone());
+        users.setUsername(employeeDTO.getUsername());
+        users.setIsActive(employeeDTO.getIsActive() != null ? employeeDTO.getIsActive() : true);
+
+        // Xử lý ngày sinh
+        if (employeeDTO.getBirthday() != null) {
+            users.setBirthday(employeeDTO.getBirthday());
         }
 
-        return null;
+        // Gán salary từ EmployeeDTO
+        users.setSalary(employeeDTO.getSalary() != null ? employeeDTO.getSalary() : 0.0);
+
+        // Lấy role từ roleRepo và gán role vào user
+        Roles roles = roleRepo.findByRoleId(employeeDTO.getRoleId());
+        if (roles != null) {
+            users.setRole(roles);
+        } else {
+            throw new DataIntegrityViolationException("Role này không tồn tại");
+        }
+
+        // Mã hóa mật khẩu nếu cập nhật password
+        if (employeeDTO.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(employeeDTO.getPassword());
+            users.setPassword(encodedPassword);
+        }
+
+        // Lưu user vào cơ sở dữ liệu và trả về đối tượng đã lưu
+        return userRepo.save(users);
     }
+
+
 
     @Override
     public void delete(Integer id) {
