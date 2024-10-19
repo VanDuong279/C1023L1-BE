@@ -132,13 +132,6 @@ public class LoginController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMesssage);
             }
 
-            if (userService.exitsEmail(userDTO.getEmail())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan email nay da ton tai");
-            }else if (userService.exitsUsername(userDTO.getUsername())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tai khoan  nay da ton tai");
-            }else if (userService.exitsNumberphone(userDTO.getNumberphone())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("So dien thoai nay da ton tai");
-            }
 
             userService.createUser(userDTO);
             return ResponseEntity.ok().body(UserRespone.builder()
