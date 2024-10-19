@@ -149,4 +149,14 @@ public class ProductController {
         productService.deleteProduct(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
+<<<<<<< HEAD
+
+    @GetMapping("/hello")
+    public  ResponseEntity<?> hello () {
+        return ResponseEntity.ok("hello");
+    }
+
+
+=======
+>>>>>>> c0e832188cc257b785a20e798a6bf1c3766294a2
 }
