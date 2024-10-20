@@ -1,7 +1,7 @@
 package com.example.projectc1023i1.Validation;
 
 import jakarta.validation.Constraint;
-import org.springframework.messaging.handler.annotation.Payload;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -60,6 +60,7 @@ public class WebSercurityConfig {
 
                             .permitAll()
                             // phaan quyen cho user
+                            .requestMatchers(POST,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(GET,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(PUT,"/api/users/**").hasAnyRole(Roles.ADMIN)

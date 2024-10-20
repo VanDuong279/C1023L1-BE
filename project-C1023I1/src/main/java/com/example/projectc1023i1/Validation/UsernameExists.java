@@ -1,7 +1,7 @@
 package com.example.projectc1023i1.Validation;
 
 import jakarta.validation.Constraint;
-import org.springframework.messaging.handler.annotation.Payload;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = NumberphoneExistsValidator.class)
+@Constraint(validatedBy = UsernameExistsValidator.class)
 public @interface UsernameExists {
     String message() default "So dien thoai nay da ton tai trong he thong";
     Class<?>[] groups() default {};

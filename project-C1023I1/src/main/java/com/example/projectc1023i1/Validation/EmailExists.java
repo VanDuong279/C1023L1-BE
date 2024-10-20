@@ -1,8 +1,8 @@
 package com.example.projectc1023i1.Validation;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
-import org.springframework.messaging.handler.annotation.Payload;
 
 import javax.lang.model.element.Element;
 import java.lang.annotation.ElementType;
