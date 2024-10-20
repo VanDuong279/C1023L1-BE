@@ -214,14 +214,14 @@ public class UserService implements IUserService {
     public Users save(EmployeeDTO employeeDTO, Integer id) {
         Users users;
 
-        // Nếu id != null, thì tìm kiếm user có sẵn để cập nhật, ngược lại tạo mới.
+        // Nếu id != null, tìm kiếm user để cập nhật, ngược lại tạo mới
         if (id != null) {
-            users = userRepo.findById(id).orElse(null);  // Tìm người dùng theo id
+            users = userRepo.findById(id).orElse(null);
             if (users == null) {
                 throw new RuntimeException("User với id này không tồn tại");
             }
         } else {
-            users = new Users(); // Thêm mới
+            users = new Users(); // Tạo mới
         }
 
         // Gán các thuộc tính từ EmployeeDTO sang Users
@@ -231,33 +231,37 @@ public class UserService implements IUserService {
         users.setNumberphone(employeeDTO.getNumberphone());
         users.setUsername(employeeDTO.getUsername());
         users.setIsActive(employeeDTO.getIsActive() != null ? employeeDTO.getIsActive() : true);
+        users.setGender(employeeDTO.getGender());
 
-        // Xử lý ngày sinh
         if (employeeDTO.getBirthday() != null) {
             users.setBirthday(employeeDTO.getBirthday());
         }
 
-        // Gán salary từ EmployeeDTO
         users.setSalary(employeeDTO.getSalary() != null ? employeeDTO.getSalary() : 0.0);
 
-        // Lấy role từ roleRepo và gán role vào user
-        Roles roles = roleRepo.findByRoleId(employeeDTO.getRoleId());
-        if (roles != null) {
-            users.setRole(roles);
+        // Nếu roleId không được cung cấp, đặt mặc định là "ROLE_USER"
+        Roles roles = null;
+        if (employeeDTO.getRoleId() == null) {
+            roles = roleRepo.findByRoleName("ROLE_USER");
+            if (roles == null) {
+                throw new RuntimeException("Role mặc định 'ROLE_USER' không tồn tại");
+            }
         } else {
-            throw new DataIntegrityViolationException("Role này không tồn tại");
+            roles = roleRepo.findById(employeeDTO.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Role không tồn tại."));
         }
 
-        // Mã hóa mật khẩu nếu cập nhật password
+        users.setRole(roles);
+
+        // Mã hóa mật khẩu nếu có password
         if (employeeDTO.getPassword() != null) {
             String encodedPassword = passwordEncoder.encode(employeeDTO.getPassword());
             users.setPassword(encodedPassword);
         }
 
-        // Lưu user vào cơ sở dữ liệu và trả về đối tượng đã lưu
+        // Lưu user và trả về đối tượng đã lưu
         return userRepo.save(users);
     }
-
 
 
     @Override

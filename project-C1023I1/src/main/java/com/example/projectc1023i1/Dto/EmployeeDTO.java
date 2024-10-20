@@ -18,9 +18,8 @@ public class EmployeeDTO {
     private  String url;
 
     @NotBlank(message = "Khonng duoc de trong ten")
-    @Size(max = 50,message = "khong duoc qua 50 ki tu")
     private String fullName;
-
+    @NotBlank(message = "Khonng duoc de trong ten")
     private String address;
 
     @DateTimeFormat(pattern = "yyyy/MM/dd")
@@ -32,6 +31,8 @@ public class EmployeeDTO {
 
     @NotBlank(message = "Khong duoc de trong")
     @Size(min = 6, message = "Tên đăng nhập phải lớn hơn 6 ký tự")
+    @Pattern(regexp = "^[^\\d].*", message = "Tên đăng nhập không được bắt đầu bằng số.") // Không bắt đầu bằng số
+    @UniqueUsername
     private String username;
 
     @NotBlank(message = "Khong duoc de trong password")
@@ -43,10 +44,12 @@ public class EmployeeDTO {
             message = "Email không hợp lệ")
     @Size(max = 50,message = "khong duoc qua 50 ki tu")
     private String email;
-
+    private Boolean gender;
+    @SalaryMultiple
     private Double salary;
 
     private Boolean isActive;
 
     private Integer roleId;
+
 }

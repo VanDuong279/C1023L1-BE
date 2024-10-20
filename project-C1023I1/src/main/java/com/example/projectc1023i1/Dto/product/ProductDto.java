@@ -3,6 +3,7 @@
     import com.example.projectc1023i1.model.product.Product;
     import jakarta.validation.constraints.NotBlank;
     import jakarta.validation.constraints.Size;
+    import lombok.Builder;
     import lombok.Getter;
     import lombok.NoArgsConstructor;
     import lombok.Setter;
@@ -11,31 +12,8 @@
     import java.time.LocalDateTime;
     import java.util.List;
 
-<<<<<<< HEAD
 
 
-
-//@NoArgsConstructor
-@Getter
-@Setter
-public class ProductDto implements Validator {
-    private String productCode;
-    @Size(min = 1, max = 225, message = "Product name must be between 1 and 225 characters")
-    private String productName;
-    private double productPrice;
-    private String productImgUrl;
-    @Builder.Default
-    private boolean productStatus;
-    private LocalDateTime createDay;
-    private LocalDateTime updateDay;
-    private Category category;
-
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return false;
-    }
-=======
-    @NoArgsConstructor
     @Getter
     @Setter
     public class ProductDto implements Validator {
@@ -57,7 +35,6 @@ public class ProductDto implements Validator {
         public boolean supports(Class<?> clazz) {
             return ProductDto.class.equals(clazz); // Sửa trả về true khi ProductDto được kiểm tra
         }
->>>>>>> c0e832188cc257b785a20e798a6bf1c3766294a2
 
         @Override
         public void validate(Object target, Errors errors) {
@@ -88,10 +65,7 @@ public class ProductDto implements Validator {
             }
         }
 
-<<<<<<< HEAD
 
     public ProductDto() {
-=======
->>>>>>> c0e832188cc257b785a20e798a6bf1c3766294a2
     }
 }
