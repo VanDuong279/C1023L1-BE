@@ -9,10 +9,8 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UniqueUsernameValidator.class)
-@Documented
 public @interface UniqueUsername {
-    String message() default "tên đăng nhập đã tồn tại";
-    Class<?>[] groups() default{};
+    String message() default "Tên đăng nhập đã tồn tại hoặc không hợp lệ.";
+    Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-
 }

@@ -4,6 +4,7 @@ import com.example.projectc1023i1.Dto.EmployeeDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.service.user.IUserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -49,23 +52,43 @@ public class UserController {
      * Thêm mới 1 user
      */
     @PostMapping
-    public ResponseEntity<Users> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<?> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO, BindingResult bindingResult) {
+        System.out.println("Received salary: " + employeeDTO.getSalary());
+        // Kiểm tra xem có lỗi validation hay không
+        if (bindingResult.hasErrors()) {
+            // Trả về danh sách các thông báo lỗi gọn gàng
+            List<String> errorMessages = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> fieldError.getDefaultMessage()) // Lấy thông báo lỗi từ mỗi fieldError
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+
+        // Nếu không có lỗi, tiếp tục thêm mới
         Users createdUser = userService.save(employeeDTO, null); // id là null cho tạo mới
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     /**
-     * update 1 user
+     * Update 1 user
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Users> updateEmployee(@PathVariable Integer id, @RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<?> updateEmployee(@PathVariable Integer id, @Valid @RequestBody EmployeeDTO employeeDTO, BindingResult bindingResult) {
+        // Kiểm tra xem có lỗi validation hay không
+        if (bindingResult.hasErrors()) {
+            // Trả về danh sách các thông báo lỗi gọn gàng
+            List<String> errorMessages = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> fieldError.getDefaultMessage()) // Lấy thông báo lỗi từ mỗi fieldError
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+
+        // Nếu không có lỗi, tiếp tục cập nhật
         Users updatedUser = userService.save(employeeDTO, id); // Sử dụng phương thức save cho cập nhật
         if (updatedUser != null) {
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
     /**
      * xóa 1 user dựa trên id
      */

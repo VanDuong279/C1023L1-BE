@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SalaryMultiple {
-    String message() default "Lương phải là bội số của 100.000 VND";
+    String message() default "Lương phải là bội số của 100.000 VND và lớn hơn 0";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
