@@ -12,8 +12,8 @@ import java.util.Optional;
 public interface IUserService {
     void createUser(UserDTO userDTO);
     String login (String username, String password);
-    boolean checkUsername(String username);
-    boolean checkNumberphone(String numberphone);
+    boolean exitsUsername(String username);
+    boolean exitsNumberphone(String numberphone);
     boolean exitsEmail(String email);
     boolean isPasswordExpired(Users Users);
     String updatePassword(Users Users);

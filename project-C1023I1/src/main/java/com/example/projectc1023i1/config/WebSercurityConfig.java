@@ -48,19 +48,33 @@ public class WebSercurityConfig {
 
                 .csrf(AbstractHttpConfigurer:: disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(request   -> {
+                .authorizeHttpRequests((request)   -> {
                     request.requestMatchers(
                                     "**")
 
                             .permitAll()
-                            .requestMatchers(POST,"/api/product/product/**").hasAnyRole(ADMIN,Roles.USER)
+<<<<<<< HEAD
+                            // phaan quyen cho user
+                            .requestMatchers(POST,"/api/users/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(DELETE,"/api/users/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(GET,"/api/users/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(PUT,"/api/users/**").hasAnyRole(Roles.ADMIN)
+
+                            // phan quyen cho product
+                            .requestMatchers(POST,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(PATCH,"/api/product/**").hasAnyRole(Roles.ADMIN)
+
+                            // phan quyen cho orders
+                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(DELETE,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(GET,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(PUT,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
 
                             .requestMatchers(POST,"/api/orders/**").hasAnyRole(ADMIN)
 
-                            .requestMatchers(POST,"/api/users/**").hasRole(ADMIN)
-                            .requestMatchers(DELETE,"/api/users/**").hasAnyRole(ADMIN)
-                            .requestMatchers(GET,"/api/users/**").hasAnyRole(ADMIN)
-                            .requestMatchers(PUT,"/api/users/**").hasAnyRole(ADMIN)
+
 
                             .requestMatchers(GET,"/api/product/**").hasAnyRole(ADMIN)
                             .requestMatchers(POST,"/api/product/**").hasAnyRole(ADMIN)
@@ -74,6 +88,8 @@ public class WebSercurityConfig {
                             .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
 
                             .requestMatchers(POST,"/api/category/**").hasRole(Roles.USER)
+
+                            // phan quyen cho feedback
 
                             .anyRequest().authenticated()
                     ;

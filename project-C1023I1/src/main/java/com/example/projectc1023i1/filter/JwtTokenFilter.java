@@ -89,10 +89,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             final List<Pair<String, String >> bypassTokens = Arrays.asList(
                     org.modelmapper.internal.Pair.of("/api/login","POST"),
                     org.modelmapper.internal.Pair.of("/api/user/register","POST"),
-                    org.modelmapper.internal.Pair.of("/api/email/validate-email","POST"),
-                    org.modelmapper.internal.Pair.of("/api/email/check-email","POST"),
-                    org.modelmapper.internal.Pair.of("/api/email/check-email","POST"),
-                    org.modelmapper.internal.Pair.of("/api/email/check-exist-email","POST"),
+                    org.modelmapper.internal.Pair.of("/api/email/check-code","POST"),
                     org.modelmapper.internal.Pair.of("/api/email/send-code-email","POST"),
                     org.modelmapper.internal.Pair.of("/api/user/change-password","POST"),
                     org.modelmapper.internal.Pair.of("/api/category","GET"),
@@ -100,6 +97,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     org.modelmapper.internal.Pair.of("/api/product/detail","GET"),
                     org.modelmapper.internal.Pair.of("/api/product/searchByProductName","GET"),
                     org.modelmapper.internal.Pair.of("/api/product/searchByCategory","GET"),
+                    org.modelmapper.internal.Pair.of("/api/username-exits-check","POST"),
+                    org.modelmapper.internal.Pair.of("/api/numberphone-exits-check","POST"),
+                    org.modelmapper.internal.Pair.of("/api/email-exits-check","POST"),
                     org.modelmapper.internal.Pair.of("/api/product","GET")
 
             );

@@ -114,7 +114,7 @@ public class UserService implements IUserService {
      * @return tra ve true neu tai khoan nay ton tai, nguoc lai la false
      */
     @Override
-    public boolean checkNumberphone(String phoneNumber) {
+    public boolean exitsNumberphone(String phoneNumber) {
         if (userRepo.existsByNumberphone(phoneNumber)) {
             return true;
         }
@@ -178,7 +178,7 @@ public class UserService implements IUserService {
      * @return true neu ton tai false  neu khong ton tai
      */
     @Override
-    public boolean checkUsername(String username) {
+    public boolean exitsUsername(String username) {
         if (userRepo.existsByUsername(username)) {
             return true;
         }
