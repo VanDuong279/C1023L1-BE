@@ -1,5 +1,7 @@
 package com.example.projectc1023i1.controller.product;
 
+import com.example.projectc1023i1.Dto.product.bill.OrderDTO;
+import com.example.projectc1023i1.Dto.product.income.IncomeDTO;
 import com.example.projectc1023i1.model.product.CallOrderRequest;
 import com.example.projectc1023i1.model.product.CallServiceRequest;
 import com.example.projectc1023i1.config.NotificationWebSocketHandler;
@@ -7,12 +9,16 @@ import com.example.projectc1023i1.model.product.OrderDetails;
 import com.example.projectc1023i1.model.product.Table;
 import com.example.projectc1023i1.service.product.OrderDetailsService;
 import com.example.projectc1023i1.service.product.TableService;
+import com.example.projectc1023i1.service.product.impl.IncomeService;
+import com.example.projectc1023i1.service.product.impl.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,6 +35,10 @@ public class OrderDetailsController {
 
     @Autowired
     private NotificationWebSocketHandler notificationWebSocketHandler;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private IncomeService incomeService;
 
     // Lấy danh sách tất cả đơn đặt hàng
     @GetMapping("")
@@ -114,6 +124,84 @@ public class OrderDetailsController {
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Lỗi khi gửi thông báo.");
         }
+    }
+
+
+
+
+
+    // Tìm hóa đơn theo khoảng ngày
+    @GetMapping("/search-by-date")
+    public ResponseEntity<List<OrderDTO>> getOrdersByDate(
+            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime date) {
+
+        List<OrderDTO> orders = orderService.getOrdersByDate(date);
+
+        if (orders.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(orders);
+    }
+
+
+
+    @GetMapping("/today")
+    public ResponseEntity<IncomeDTO> getTodayIncome() {
+        IncomeDTO income = incomeService.getTodayIncome();
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập hôm nay
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    }
+
+    @GetMapping("/week")
+    public ResponseEntity<IncomeDTO> getThisWeekIncome() {
+        IncomeDTO income = incomeService.getThisWeekIncome();
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tuần này
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    }
+
+    @GetMapping("/month")
+    public ResponseEntity<IncomeDTO> getThisMonthIncome() {
+        IncomeDTO income = incomeService.getThisMonthIncome();
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tháng này
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    }
+
+    @GetMapping("/year")
+    public ResponseEntity<IncomeDTO> getThisYearIncome() {
+        IncomeDTO income = incomeService.getThisYearIncome();
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập năm này
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    }
+
+    @GetMapping("/custom")
+    public ResponseEntity<IncomeDTO> getIncomeByDateRange(
+            @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime from,
+            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime to) {
+
+        IncomeDTO income = incomeService.getIncomeByDateRange(from, to);
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập trong khoảng ngày
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
     }
 
     @PostMapping("/hello")

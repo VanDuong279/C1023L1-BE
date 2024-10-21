@@ -2,6 +2,7 @@ package com.example.projectc1023i1.model.product;
 
 import com.example.projectc1023i1.model.Users;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +12,8 @@ public class OrderDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId;
+
+    private Integer id;
 
     @Column(nullable = false)
     private LocalDateTime dayCreate;
@@ -39,19 +41,29 @@ public class OrderDetails {
     @ManyToOne
     @JoinColumn(name = "table_id")
     private Table table;
-
+    @Getter
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;
+    @Getter
+    @ManyToOne
+    @JoinColumn(name = "order_id") // tên cột trong bảng
+    private Order order;
 
     // Getters và Setters cho tất cả các thuộc tính
 
-    public int getOrderId() {
-        return orderId;
+
+
+
+    public Product getProduct() {
+        return product;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public Order getOrder() {
+        return order;
     }
 
     public LocalDateTime getDayCreate() {
@@ -132,5 +144,23 @@ public class OrderDetails {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

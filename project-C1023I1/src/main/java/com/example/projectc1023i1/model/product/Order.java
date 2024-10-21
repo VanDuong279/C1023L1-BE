@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer orderId;
 
     @Column(nullable = false)
@@ -64,5 +65,41 @@ public class Order {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public LocalDateTime getDayCreate() {
+        return dayCreate;
+    }
+
+    public LocalDateTime getDayUpdate() {
+        return dayUpdate;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public LocalDateTime getShippingDay() {
+        return shippingDay;
+    }
+
+    public double getTotalMoneyOrder() {
+        return totalMoneyOrder;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public Users getUser() {
+        return user;
     }
 }
