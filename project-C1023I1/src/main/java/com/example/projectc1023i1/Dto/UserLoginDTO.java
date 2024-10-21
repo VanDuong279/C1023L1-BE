@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.Dto;
 
+import com.example.projectc1023i1.Validation.UsernameExists;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.validation.Validator;
 public class UserLoginDTO implements Validator {
     @NotBlank(message = "Khong duoc de trong")
     @Size(min = 3, max = 50, message = "Ten nguoi dung phai co do dai tu 3 den 20 ky tu")
+    @UsernameExists
     private String username;
 
     @NotBlank(message = "Mat khau khong duoc de trong")

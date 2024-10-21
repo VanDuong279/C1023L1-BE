@@ -49,14 +49,7 @@ public class WebSercurityConfig {
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((request)   -> {
                     request.requestMatchers(
-                                    "/api/email-exits-check","/api/numberphone-exits-check",
-                                    "/api/username-exits-check", "/api/product/searchByCategory",
-                                    "/api/product/searchByProductName","/api/product/detail",
-                                    "/api/product" ,"/api/category",
-                                    "/api/user/change-password", "/api/email/send-code-email",
-                                    "/api/email/check-exist-email","/api/email/check-email",
-                                    "/api/email/check-email","/api/email/validate-email",
-                                    "/api/user/register","/api/login")
+                                    "**")
 
                             .permitAll()
                             // phaan quyen cho user

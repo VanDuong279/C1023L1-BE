@@ -4,9 +4,11 @@ import com.example.projectc1023i1.Dto.SendCodeDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.Dto.UserLoginDTO;
 import com.example.projectc1023i1.config.ModelMapperConfig;
+import com.example.projectc1023i1.model.SendCode;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.respone.ChangePasswordRespone;
 import com.example.projectc1023i1.respone.LoginRespone;
+import com.example.projectc1023i1.respone.UserErrorsRespone;
 import com.example.projectc1023i1.respone.UserRespone;
 import com.example.projectc1023i1.service.user.ISendCodeService;
 import com.example.projectc1023i1.service.user.IUserService;
@@ -51,17 +53,10 @@ public class LoginController {
      *         - Ok (200) nếu đăng nhập thành công và trả về thông tin người dùng cùng token.
      *         - InternalServerError (500) nếu có lỗi xảy ra trong quá trình xử lý.
      */
-    @PostMapping( value = "/login", produces = "application/json")
+    @PostMapping( value = "/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO,
                                    BindingResult bindingResult) {
         try {
-            if(bindingResult.hasErrors()){
-                List<String> errorsMesssage = bindingResult.getFieldErrors().
-                        stream().
-                        map(FieldError:: getDefaultMessage)
-                        .toList();
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMesssage);
-            }
             Optional<Users> optionalUser = userService.findByUsername(userLoginDTO.getUsername());
             if (!optionalUser.isPresent()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay nguoi dung");
@@ -80,7 +75,6 @@ public class LoginController {
                     .message("Ban da dang nhap thanh cong")
                     .userDTO(userService.ConverDTO(users))
                     .build());
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -125,15 +119,46 @@ public class LoginController {
                                         HttpServletRequest request) {
         try {
             if(bindingResult.hasErrors()){
-                List<String> errorsMesssage = bindingResult.getFieldErrors().
-                        stream().
-                        map(FieldError:: getDefaultMessage)
+                List<UserErrorsRespone> errorsMessage = bindingResult.getFieldErrors()
+                        .stream()
+                        .map(fieldError -> {
+                            UserErrorsRespone error = new UserErrorsRespone();
+                            switch (fieldError.getField()) {
+                                case "fullName":
+                                    error.setFullName(fieldError.getDefaultMessage());
+                                    break;
+                                case "address":
+                                    error.setAddress(fieldError.getDefaultMessage());
+                                    break;
+                                case "birthday":
+                                    // Nếu bạn cần xử lý dạng ngày, bạn có thể tùy chỉnh ở đây
+                                    error.setBirthday(null);
+                                    break;
+                                case "numberphone":
+                                    error.setNumberphone(fieldError.getDefaultMessage());
+                                    break;
+                                case "username":
+                                    error.setUsername(fieldError.getDefaultMessage());
+                                    break;
+                                case "password":
+                                    error.setPassword(fieldError.getDefaultMessage());
+                                    break;
+                                case "email":
+                                    error.setEmail(fieldError.getDefaultMessage());
+                                    break;
+                                default:
+                                    // Có thể xử lý trường hợp không xác định
+                                    break;
+                            }
+                            return error;
+                        })
                         .toList();
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMesssage);
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMessage);
             }
 
 
-            userService.createUser(userDTO);
+//            userService.createUser(userDTO);
             return ResponseEntity.ok().body(UserRespone.builder()
                     .userDTO(userDTO)
                     .message("Ban da tao thanh cong 1 user")
@@ -180,20 +205,12 @@ public class LoginController {
      *         tra ve (200) neu nhu qua trinh gui code qua email thanh cong
      */
     @PostMapping("/email/send-code-email")
-    public ResponseEntity<?> sendCodeEmail(@Valid @RequestBody UserDTO userDTO,
-                                           BindingResult bindingResult) {
+    public ResponseEntity<?> sendCodeEmail(@RequestParam("email")  String email) {
         try {
-            if(bindingResult.hasErrors()){
-                List<String> errorsMesssage = bindingResult.getFieldErrors().
-                        stream().
-                        map(FieldError:: getDefaultMessage)
-                        .toList();
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("errors",errorsMesssage));
-            }
-            Integer code = emailSenderService.sendSimpleMail(userDTO.getEmail());
+            Integer code = emailSenderService.sendSimpleMail(email);
             if (code!=0) {
                 String checkCode = String.valueOf(code);
-                sendCodeService.save(new SendCodeDTO(checkCode,userDTO.getEmail()));
+                sendCodeService.save(new SendCodeDTO(checkCode,email));
                 return ResponseEntity.ok("ddax hoan thanh");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -218,67 +235,28 @@ public class LoginController {
                                        @RequestParam("email") String email) {
         try {
             // Tìm session dựa trên email
-            String sessionCheck = sendCodeService.findByEmail(email);
+            SendCode sendCode = sendCodeService.findByEmail(email);
 
 
             // Kiểm tra nếu mã code không tồn tại
-            if (sessionCheck == null) {
+            if (sendCode == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mã code không tồn tại");
             }
 
             // So sánh mã code và xóa session nếu khớp
-            if (sessionCheck.equals(code)) {
-                sendCodeService.delete(email);
+            if (sendCode.getCheckCode().equals(code)) {
+                sendCodeService.delete(sendCode);
+                return ResponseEntity.ok("da hoan thanh");
             }
 
             // Trả về trạng thái OK nếu mọi thứ đều thành công
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Da kiem tra thanh cong"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mã code không tồn tại");
 
         } catch (Exception e) {
             // Xử lý ngoại lệ và trả về lỗi nội bộ server
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Đã xảy ra lỗi trong quá trình kiểm tra mã code");
         }
     }
-
-
-
-    @PostMapping("/username-exits-check")
-    public ResponseEntity<?> findAccountByUsername(@RequestParam("username") String username) {
-        try {
-            if (userService.exitsUsername(username)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("usernameExist");
-            }
-            return ResponseEntity.ok().body("Let's continue");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ban chua nhap so dien thoai");
-        }
-    }
-
-    @PostMapping("/email-exits-check/{id}")
-    public ResponseEntity<?> findAccountByEmail(@RequestParam("email") String email) {
-        try {
-            if (userService.exitsEmail(email)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("emailExist ");
-            }
-            return ResponseEntity.ok().body("Let's continue ");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ban chua nhap so dien thoai");
-        }
-    }
-
-    @PostMapping("/numberphone-exits-check")
-    public ResponseEntity<?> findAccountByNumberPhone(@RequestParam("numberphone") String numberphone) {
-        try {
-            if (userService.exitsNumberphone(numberphone)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("numberphoneExist ");
-            }
-            return ResponseEntity.ok().body("Lets continue ");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ban chua nhap so dien thoai");
-        }
-    }
-
-
     @GetMapping("/user/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam("email") String email) {
         if (userService.exitsEmail(email)) {

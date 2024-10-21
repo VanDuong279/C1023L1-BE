@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = EmailExistsValidator.class)
 public @interface EmailExists {
-    String message() default "Email already exists";
+    String message() default "Email này đã tồn tại trong hệ thống";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

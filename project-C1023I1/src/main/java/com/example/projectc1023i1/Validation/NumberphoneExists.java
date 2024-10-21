@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = NumberphoneExistsValidator.class)
 public @interface NumberphoneExists {
-    String message() default "So dien thoai nay da ton tai";
+    String message() default "Số điện thoại này đã tồn tại trong hệ thống";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

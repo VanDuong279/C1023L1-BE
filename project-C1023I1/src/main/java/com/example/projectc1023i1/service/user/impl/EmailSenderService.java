@@ -22,13 +22,12 @@ public class EmailSenderService {
             String mail = toEmai + "";
             System.out.println(mail);
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("tranduonghuuxuan22@gmail.com");
+            message.setFrom("quanlycaphec010@gmail.com");
             message.setTo(mail);
             String getCode = String.valueOf(getNumberCode());
 
             message.setSubject("Your confirmation code is : "+getCode);
             message.setText("Cafe-management thank you");
-
             mailSender.send(message);
             return Integer.parseInt(getCode);
         } catch ( Exception e ) {

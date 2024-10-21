@@ -32,9 +32,9 @@ public class SendCodeService implements ISendCodeService {
      * @return tra ve 1 chuoi
      */
     @Override
-    public String findByEmail(String email) {
-        String sessionEntity = sendCodeRepo.findByEmailCode(email);
-        return sessionEntity;
+    public SendCode findByEmail(String email) {
+
+        return sendCodeRepo.findByEmail(email);
     }
 
     /**
@@ -42,7 +42,7 @@ public class SendCodeService implements ISendCodeService {
      * @param email email nguoi dung nhap vao
      */
     @Override
-    public void delete(String email) {
-        sendCodeRepo.delete(email);
+    public void delete(SendCode sendCode) {
+        sendCodeRepo.delete(sendCode);
     }
 }
