@@ -22,4 +22,5 @@ public interface ISendCodeRepo extends JpaRepository<SendCode, Long> {
     @Transactional
     @Query(value = "INSERT INTO send_code (check_code, email) VALUES (:checkCode, :email)", nativeQuery = true)
     void saveSendCode(String checkCode, String email);
+
 }

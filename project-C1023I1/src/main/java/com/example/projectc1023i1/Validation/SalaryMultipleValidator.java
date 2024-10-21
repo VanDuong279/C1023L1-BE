@@ -14,6 +14,6 @@ public class SalaryMultipleValidator implements ConstraintValidator<SalaryMultip
         if (salary == null) {
             return true; // Bỏ qua nếu là null
         }
-        return salary % 100000 == 0; // Kiểm tra bội số
+        return salary > 0 && salary % 100000 == 0;
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.projectc1023i1.model.Roles.ADMIN;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
@@ -52,6 +53,7 @@ public class WebSercurityConfig {
                                     "**")
 
                             .permitAll()
+<<<<<<< HEAD
                             // phaan quyen cho user
                             .requestMatchers(POST,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/users/**").hasAnyRole(Roles.ADMIN)
@@ -69,6 +71,23 @@ public class WebSercurityConfig {
                             .requestMatchers(GET,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(PUT,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+
+                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(ADMIN)
+
+
+
+                            .requestMatchers(GET,"/api/product/**").hasAnyRole(ADMIN)
+                            .requestMatchers(POST,"/api/product/**").hasAnyRole(ADMIN)
+                            .requestMatchers(DELETE,"/api/product/**").hasAnyRole(ADMIN)
+                            .requestMatchers(PATCH,"/api/product/**").hasAnyRole(ADMIN)
+
+                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
+                            .requestMatchers(DELETE,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
+                            .requestMatchers(GET,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
+                            .requestMatchers(PUT,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
+                            .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
+
+                            .requestMatchers(POST,"/api/category/**").hasRole(Roles.USER)
 
                             // phan quyen cho feedback
 

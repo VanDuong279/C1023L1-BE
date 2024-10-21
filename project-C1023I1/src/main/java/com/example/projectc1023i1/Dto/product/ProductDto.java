@@ -3,6 +3,7 @@
     import com.example.projectc1023i1.model.product.Product;
     import jakarta.validation.constraints.NotBlank;
     import jakarta.validation.constraints.Size;
+    import lombok.Builder;
     import lombok.Getter;
     import lombok.NoArgsConstructor;
     import lombok.Setter;
@@ -11,7 +12,8 @@
     import java.time.LocalDateTime;
     import java.util.List;
 
-    @NoArgsConstructor
+
+
     @Getter
     @Setter
     public class ProductDto implements Validator {
@@ -63,4 +65,7 @@
             }
         }
 
+
+    public ProductDto() {
     }
+}
