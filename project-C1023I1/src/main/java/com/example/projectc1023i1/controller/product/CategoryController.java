@@ -1,5 +1,4 @@
 package com.example.projectc1023i1.controller.product;
-
 import com.example.projectc1023i1.Dto.product.CategoryDto;
 import com.example.projectc1023i1.model.product.Category;
 import com.example.projectc1023i1.service.product.ICategoryService;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,8 +35,10 @@ public class CategoryController {
     /**
      * Thêm mới category
      */
-    @PostMapping("/createCategory")
+    @PostMapping("")
     public ResponseEntity<Object> addCategory(@Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult){
+        categoryDto.setCategoryList(categoryService.findAllCategories());
+        new CategoryDto().validate(categoryDto, bindingResult);
         if (bindingResult.hasErrors()){
             List<String> errors = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -53,8 +53,10 @@ public class CategoryController {
     /**
      * Chỉnh sửa category
      */
-    @PatchMapping("/editCategory/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Object> editCategory(@PathVariable int id, @Valid @RequestBody CategoryDto categoryDto, BindingResult bindingResult){
+        categoryDto.setUpdate(true);
+        new CategoryDto().validate(categoryDto, bindingResult);
         Category existCategory = categoryService.findCategoryById(id);
         if (existCategory == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -72,7 +74,7 @@ public class CategoryController {
     /**
      * Xoá category
      */
-    @DeleteMapping("/deleteCategory/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable int id){
         Category category = categoryService.findCategoryById(id);
         if (category == null){
