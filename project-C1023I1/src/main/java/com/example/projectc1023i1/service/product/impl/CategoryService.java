@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class CategoryService implements ICategoryService {
     @Autowired
-    ICategoryRepository categoryRepository;
+    private ICategoryRepository categoryRepository;
 
     @Override
     public List<Category> findAllCategories() {
