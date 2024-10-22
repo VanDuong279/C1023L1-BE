@@ -1,7 +1,9 @@
 package com.example.projectc1023i1.model.product;
 
 import com.example.projectc1023i1.model.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +13,7 @@ public class OrderDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId;
+    private Integer order_details_Id;
 
     @Column(nullable = false)
     private LocalDateTime dayCreate;
@@ -30,28 +32,55 @@ public class OrderDetails {
     @Column(nullable = false)
     private String status; // Trạng thái đơn hàng
 
+    @ManyToOne
+    @JoinColumn(name = "call_order_request_id")
+    private CallOrderRequest callOrderRequest;
     @Column(nullable = false)
-    private LocalDateTime callOrderTime; // Thời gian gọi món
-
+    private LocalDateTime callOrderTime;
     @Column(nullable = false)
     private LocalDateTime callServiceTime; // Thời gian gọi phục vụ
 
     @ManyToOne
-    @JoinColumn(name = "table_id")
+    @JoinColumn(name = "table_id") // Chỉ rõ khóa ngoại
     private Table table;
 
+    public LocalDateTime getCallOrderTime() {
+        return callOrderTime;
+    }
+
+    public void setCallOrderTime(LocalDateTime callOrderTime) {
+        this.callOrderTime = callOrderTime;
+    }
+
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private Users user;
 
-    // Getters và Setters cho tất cả các thuộc tính
+    // Thêm mối quan hệ tới Product
+    @ManyToOne
+    @JoinColumn(name = "product_id") // Chỉ rõ khóa ngoại của Product
+    private Product product; // Liên kết tới bảng Product
 
-    public int getOrderId() {
-        return orderId;
+    public OrderDetails() {
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    // Getters và Setters cho tất cả các thuộc tính
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Integer getOrder_details_Id() {
+        return order_details_Id;
+    }
+
+    public void setOrder_details_Id(Integer order_details_Id) {
+        this.order_details_Id = order_details_Id;
     }
 
     public LocalDateTime getDayCreate() {
@@ -102,14 +131,6 @@ public class OrderDetails {
         this.status = status;
     }
 
-    public LocalDateTime getCallOrderTime() {
-        return callOrderTime;
-    }
-
-    public void setCallOrderTime(LocalDateTime callOrderTime) {
-        this.callOrderTime = callOrderTime;
-    }
-
     public LocalDateTime getCallServiceTime() {
         return callServiceTime;
     }
@@ -133,4 +154,13 @@ public class OrderDetails {
     public void setUser(Users user) {
         this.user = user;
     }
+
+    public CallOrderRequest getCallOrderRequest() {
+        return callOrderRequest;
+    }
+
+    public void setCallOrderRequest(CallOrderRequest callOrderRequest) {
+        this.callOrderRequest = callOrderRequest;
+    }
+    // Các getter và setter khác...
 }

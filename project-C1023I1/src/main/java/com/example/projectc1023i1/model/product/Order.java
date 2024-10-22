@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.model.product;
 
 import com.example.projectc1023i1.model.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -27,10 +28,12 @@ public class Order {
     private double totalMoneyOrder;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "table_id")
     private Table table;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private Users user;
 
