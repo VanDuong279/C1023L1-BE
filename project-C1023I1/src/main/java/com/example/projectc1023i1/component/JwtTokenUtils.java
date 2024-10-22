@@ -43,7 +43,7 @@ public class JwtTokenUtils {
             String token = Jwts.builder()
                     .setClaims(claims)// thêm claims vào trong token
                     .setSubject(user.getUsername())// chur thể của token chính là số điện thoại
-                    .setExpiration(new Date(System.currentTimeMillis() + expiration*1000L))// xét thời gian tồn tại của token
+                    .setExpiration(new Date(System.currentTimeMillis() + expiration*100000L))// xét thời gian tồn tại của token
                     .signWith(getSignInkey(), SignatureAlgorithm.HS256)// sử dụng thuật toán để mã hóa token
                     .compact();// phải có để xây dựng token
             return token;
@@ -51,6 +51,7 @@ public class JwtTokenUtils {
             // có thể sử dụng Logger
 //            System.out.println("cannot create token"+ e.getMessage());
             throw new InvalidParameterException("không thể tra token"+e.getMessage());
+
 
         }
     }
@@ -97,7 +98,7 @@ public class JwtTokenUtils {
     // kiểm tra xem token này có hợp lệ hay khoong
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
-        Users users = userRepository.findByUsername(userName).get();
+        Users users = userRepository.findByUsername(userName).orElse(null);
         // kiểm tra xem số điện thoại đem làm account có trùng không và xem thử token nó có còn hạn hay không
         return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token,users));
     }

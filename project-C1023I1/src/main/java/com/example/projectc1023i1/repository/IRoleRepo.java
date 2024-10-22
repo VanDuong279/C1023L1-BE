@@ -13,4 +13,6 @@ public interface IRoleRepo extends JpaRepository<Roles, Integer> {
 
     @Override
     Optional<Roles> findById(Integer integer);
+    @Query(value = "select r from Roles r where r.roleName = :roleName")
+    Roles findByRoleName(@Param("roleName") String roleName);
 }

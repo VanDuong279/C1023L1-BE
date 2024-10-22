@@ -1,6 +1,4 @@
 package com.example.projectc1023i1.service.product.impl;
-
-
 import com.example.projectc1023i1.model.product.Category;
 import com.example.projectc1023i1.model.product.Product;
 import com.example.projectc1023i1.repository.product.IProductRepository;
@@ -9,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -71,5 +68,10 @@ public class ProductService implements IProductService {
     @Override
     public void deleteProduct(int id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existProductName(String productName) {
+        return productRepository.existsProductByProductName(productName);
     }
 }

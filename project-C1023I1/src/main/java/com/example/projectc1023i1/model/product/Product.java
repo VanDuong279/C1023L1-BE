@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +25,12 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+<<<<<<< HEAD
+    @Column(name = "product_id")
+    private int productId;
+=======
     private Integer productId;
+>>>>>>> origin/main
 
     @Column(length = 30, nullable = false)
     private String productCode;

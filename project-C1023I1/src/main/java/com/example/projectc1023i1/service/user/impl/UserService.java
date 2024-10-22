@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.service.user.impl;
 
+import com.example.projectc1023i1.Dto.EmployeeDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.component.JwtTokenUtils;
 import com.example.projectc1023i1.model.Roles;
@@ -113,7 +114,7 @@ public class UserService implements IUserService {
      * @return tra ve true neu tai khoan nay ton tai, nguoc lai la false
      */
     @Override
-    public boolean checkNumberphone(String phoneNumber) {
+    public boolean exitsNumberphone(String phoneNumber) {
         if (userRepo.existsByNumberphone(phoneNumber)) {
             return true;
         }
@@ -177,7 +178,7 @@ public class UserService implements IUserService {
      * @return true neu ton tai false  neu khong ton tai
      */
     @Override
-    public boolean checkUsername(String username) {
+    public boolean exitsUsername(String username) {
         if (userRepo.existsByUsername(username)) {
             return true;
         }
@@ -201,8 +202,7 @@ public class UserService implements IUserService {
 
     @Override
     public Page<Users> findAll(Pageable pageable) {
-//        return  userRepo.findAll(pageable);;
-        return null;
+        return  userRepo.findAll(pageable);
     }
 
     @Override
@@ -211,27 +211,58 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Users save(UserDTO userDTO, Integer id) {
-        Users user;
-        if (id == null) {
-            user = new Users(); // Thêm mới
-//            user.setCreatedAt(new java.util.Date());   // cai nay khong can thiet
-        } else {
-            user = userRepo.findById(id).orElse(null); // Cập nhật
-            if (user != null) {
-//                user.setUpdatedAt(new java.util.Date()); // cai nay khong can thiet
+    public Users save(EmployeeDTO employeeDTO, Integer id) {
+        Users users;
+
+        // Nếu id != null, tìm kiếm user để cập nhật, ngược lại tạo mới
+        if (id != null) {
+            users = userRepo.findById(id).orElse(null);
+            if (users == null) {
+                throw new RuntimeException("User với id này không tồn tại");
             }
+        } else {
+            users = new Users(); // Tạo mới
         }
 
-        if (user != null) {
-            BeanUtils.copyProperties(userDTO, user, "userId", "creatAt");
-            Roles role = roleRepo.findById(userDTO.getRoleId()).orElse(null);
-            user.setRole(role);
-            return userRepo.save(user);
+        // Gán các thuộc tính từ EmployeeDTO sang Users
+        users.setFullName(employeeDTO.getFullName() != null ? employeeDTO.getFullName() : "");
+        users.setAddress(employeeDTO.getAddress() != null ? employeeDTO.getAddress() : "");
+        users.setEmail(employeeDTO.getEmail());
+        users.setNumberphone(employeeDTO.getNumberphone());
+        users.setUsername(employeeDTO.getUsername());
+        users.setIsActive(employeeDTO.getIsActive() != null ? employeeDTO.getIsActive() : true);
+        users.setGender(employeeDTO.getGender());
+
+        if (employeeDTO.getBirthday() != null) {
+            users.setBirthday(employeeDTO.getBirthday());
         }
 
-        return null;
+        users.setSalary(employeeDTO.getSalary() != null ? employeeDTO.getSalary() : 0.0);
+
+        // Nếu roleId không được cung cấp, đặt mặc định là "ROLE_USER"
+        Roles roles = null;
+        if (employeeDTO.getRoleId() == null) {
+            roles = roleRepo.findByRoleName("ROLE_USER");
+            if (roles == null) {
+                throw new RuntimeException("Role mặc định 'ROLE_USER' không tồn tại");
+            }
+        } else {
+            roles = roleRepo.findById(employeeDTO.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Role không tồn tại."));
+        }
+
+        users.setRole(roles);
+
+        // Mã hóa mật khẩu nếu có password
+        if (employeeDTO.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(employeeDTO.getPassword());
+            users.setPassword(encodedPassword);
+        }
+
+        // Lưu user và trả về đối tượng đã lưu
+        return userRepo.save(users);
     }
+
 
     @Override
     public void delete(Integer id) {
