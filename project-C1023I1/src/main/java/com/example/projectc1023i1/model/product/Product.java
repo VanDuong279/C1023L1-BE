@@ -13,12 +13,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * Đây là mô tả của lớp Product
- * @author VuNH
- * @since 2024-10-13
- */
 @Entity
 @Getter
 @Setter
@@ -26,6 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "product")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 <<<<<<< HEAD
@@ -59,8 +56,12 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore // Ngăn chặn serialization vòng lặp
+    @JsonIgnore
     @JsonManagedReference
     private Category category;
 
+    // Mối quan hệ với OrderDetails
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Tránh serialization vòng lặp
+    private List<OrderDetails> orderDetailsList;
 }

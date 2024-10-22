@@ -20,8 +20,9 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 
     @Override
     public List<OrderDetails> findOrdersByTableId(int tableId) {
-        return orderDetailsRepository.findByTableId(tableId);
+        return orderDetailsRepository.findOrderDetailsByTableId(tableId);
     }
+
 
     @Override
     public void save(OrderDetails orderDetails) {

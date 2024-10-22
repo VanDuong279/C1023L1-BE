@@ -1,7 +1,6 @@
 package com.example.projectc1023i1.service.product.impl;
 
 
-
 import com.example.projectc1023i1.model.product.Table;
 import com.example.projectc1023i1.repository.product.TableRepository;
 import com.example.projectc1023i1.service.product.TableService;

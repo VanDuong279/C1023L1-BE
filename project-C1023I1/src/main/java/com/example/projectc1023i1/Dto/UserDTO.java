@@ -56,6 +56,7 @@ public class UserDTO implements Validator {
     private Double salary;
 
     private Boolean isActive;
+    private  Boolean gender;
 
     private Integer roleId;
 
