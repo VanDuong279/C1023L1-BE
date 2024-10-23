@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4d2dbc2-f314-46cd-b075-7a7474789f10" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules/com.example.project-C1023I1.main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/project-C1023I1.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/project-C1023I1.test.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/controller/product/TableController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/ITableRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/ITableService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableService.java" afterDir="false" />
-    </list>
+    <list default="true" id="b4d2dbc2-f314-46cd-b075-7a7474789f10" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,7 +31,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/model/Table.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/model/product/Table.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -55,9 +47,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Codegym/Module6_c10/C1023L1-BE/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product",
+    "last_opened_file_path": "C:/Codegym/Module6_c10/C1023L1-BE",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "spring.configuration.checksum": "b6d486ad727792dca91b0f722233fdd3"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -85,6 +78,7 @@
       <option name="presentableId" value="Default" />
       <updated>1729507382329</updated>
       <workItem from="1729507383552" duration="1924000" />
+      <workItem from="1729678423705" duration="341000" />
     </task>
     <servers />
   </component>
