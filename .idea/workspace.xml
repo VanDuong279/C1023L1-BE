@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b4d2dbc2-f314-46cd-b075-7a7474789f10" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/modules/com.example.project-C1023I1.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/project-C1023I1.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/project-C1023I1.test.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/controller/product/TableController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/ITableRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/ITableService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/project-C1023I1">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/project-C1023I1/src/main/java/com/example/projectc1023i1/model/Table.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2nkBqIuZ88rv6vINEYp4GD4ZC3l" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Codegym/Module6_c10/C1023L1-BE/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Codegym\Module6_c10\C1023L1-BE\project-C1023I1\src\main\java\com\example\projectc1023i1\repository\product" />
+      <recent name="C:\Codegym\Module6_c10\C1023L1-BE\project-C1023I1\src\main\java\com\example\projectc1023i1\service\product" />
+      <recent name="C:\Codegym\Module6_c10\C1023L1-BE\project-C1023I1\src\main\java\com\example\projectc1023i1\controller\product" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="ProjectC1023I1Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="com.example.project-C1023I1.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.projectc1023i1.ProjectC1023I1Application" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b4d2dbc2-f314-46cd-b075-7a7474789f10" name="Changes" comment="" />
+      <created>1729507382329</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1729507382329</updated>
+      <workItem from="1729507383552" duration="1924000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -1,6 +1,8 @@
-package com.example.projectc1023i1.service.table.impl;
+package com.example.projectc1023i1.service.product;
 
-import com.example.projectc1023i1.model.Table;
+
+import com.example.projectc1023i1.model.product.Table;
+
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;

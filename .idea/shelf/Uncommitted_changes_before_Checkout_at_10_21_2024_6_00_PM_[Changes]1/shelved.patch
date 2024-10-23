@@ -1,0 +1,251 @@
+Index: project-C1023I1/src/main/java/com/example/projectc1023i1/controller/product/TableController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project-C1023I1/src/main/java/com/example/projectc1023i1/controller/product/TableController.java b/project-C1023I1/src/main/java/com/example/projectc1023i1/controller/product/TableController.java
+new file mode 100644
+--- /dev/null	
++++ b/project-C1023I1/src/main/java/com/example/projectc1023i1/controller/product/TableController.java	
+@@ -0,0 +1,68 @@
++package com.example.projectc1023i1.controller.product;
++
++
++import com.example.projectc1023i1.model.product.Table;
++import com.example.projectc1023i1.service.product.ITableService;
++import lombok.RequiredArgsConstructor;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.http.HttpStatus;
++import org.springframework.http.ResponseEntity;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++import java.util.List;
++
++@CrossOrigin(origins = "http://localhost:3000")
++@RestController
++@RequestMapping("/api/table")
++@RequiredArgsConstructor
++public class TableController {
++    @Autowired
++    private ITableService tableService;
++
++    @GetMapping("/get_table")
++    public ResponseEntity<List<Table>> findAllTable(){
++        List<Table> tableList = tableService.findAllTable();
++        if(tableList.isEmpty()) {
++            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
++        } else {
++            return new ResponseEntity<>(tableList,HttpStatus.OK);
++        }
++    }
++
++    @GetMapping("/getTableByCode")
++    public ResponseEntity<Table> findTableByCode(@PathVariable ("code" )String code){
++        Table table=tableService.findTableByCode(code);
++        if (table== null) {
++            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
++        } else {
++            return new ResponseEntity<>(table, HttpStatus.OK);
++        }
++    }
++    @GetMapping("/getAllTableByStatus")
++    public ResponseEntity<List<Table>> findAllTableByStatus(@PathVariable ("status" )boolean status){
++        List<Table> tableList = tableService.findTableByStatus(status);
++        if(tableList.isEmpty()) {
++            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
++        } else {
++            return new ResponseEntity<>(tableList,HttpStatus.OK);
++        }
++    }
++
++
++
++@DeleteMapping("/delete/{id}")
++public ResponseEntity<String> delete(@PathVariable("id") int id) {
++    boolean isDeleted = tableService.deleteTableById(id);
++
++    if (isDeleted) {
++        return ResponseEntity.ok("Table with ID " + id + " has been deleted successfully.");
++    } else {
++        return ResponseEntity.status(HttpStatus.NOT_FOUND)
++                .body("Table with ID " + id + " not found.");
++    }
++}
++
++
++
++}
+Index: .idea/modules/project-C1023I1.test.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/modules/project-C1023I1.test.iml b/.idea/modules/project-C1023I1.test.iml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/modules/project-C1023I1.test.iml	
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module version="4">
++  <component name="SonarLintModuleSettings">
++    <option name="uniqueId" value="98d52e0e-a8dc-434d-9afd-a8ea842b1895" />
++  </component>
++</module>
+\ No newline at end of file
+Index: .idea/modules/project-C1023I1.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/modules/project-C1023I1.iml b/.idea/modules/project-C1023I1.iml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/modules/project-C1023I1.iml	
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module version="4">
++  <component name="SonarLintModuleSettings">
++    <option name="uniqueId" value="49013138-825c-4495-a966-9cb66a113058" />
++  </component>
++</module>
+\ No newline at end of file
+Index: .idea/modules/com.example.project-C1023I1.main.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/modules/com.example.project-C1023I1.main.iml b/.idea/modules/com.example.project-C1023I1.main.iml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/modules/com.example.project-C1023I1.main.iml	
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module version="4">
++  <component name="SonarLintModuleSettings">
++    <option name="uniqueId" value="872a5e5d-9d58-4156-89a0-e7ce0631b518" />
++  </component>
++</module>
+\ No newline at end of file
+Index: project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/ITableRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/ITableRepository.java b/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/ITableRepository.java
+new file mode 100644
+--- /dev/null	
++++ b/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/ITableRepository.java	
+@@ -0,0 +1,37 @@
++package com.example.projectc1023i1.repository.product;
++
++
++import com.example.projectc1023i1.model.product.Table;
++import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.Query;
++import org.springframework.data.repository.query.Param;
++import org.springframework.stereotype.Repository;
++
++import java.util.List;
++@Repository
++public interface ITableRepository extends JpaRepository<Table,Integer> {
++    @Query(value = "select t.id as tableId, t.code as tableCode, t.status as tableStatus from Table as t")
++    List<Table> findAllTable();
++
++    @Query(value = "select t.id as tableId, t.code as tableCode, t.status as tableStatus from Table as t where t.code like :table_code ")
++    Table findTableByCode(@Param("table_code") String tableCode);
++
++    @Query(value = "select t.id as tableId, t.code as tableCode, t.status as tableStatus from Table as t where t.status = :status ")
++    List<Table> findTableByStatus(@Param("status") boolean status);
++
++
++
++    @Query(value = "DELETE FROM Table t WHERE t.id = :tableId")
++    boolean deleteTableById(@Param("tableId") int tableId);
++
++
++    @Query(value = "UPDATE Table t SET t.status = :newStatus WHERE t.id = :tableId")
++    void updateTableById(@Param("tableId") Long tableId, @Param("newStatus") boolean newStatus);
++
++
++
++
++
++
++
++}
+Index: project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/ITableService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/ITableService.java b/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/ITableService.java
+new file mode 100644
+--- /dev/null	
++++ b/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/ITableService.java	
+@@ -0,0 +1,15 @@
++package com.example.projectc1023i1.service.product;
++
++
++import com.example.projectc1023i1.model.product.Table;
++import org.springframework.data.repository.query.Param;
++
++import java.util.List;
++
++public interface ITableService {
++    List<Table> findAllTable();
++    Table findTableByCode(@Param("table_code") String tableCode);
++    List<Table> findTableByStatus(@Param("status") boolean status);
++    boolean deleteTableById(@Param("tableId") int tableId);
++    void updateTableById(@Param("tableId") Long tableId, @Param("newStatus") boolean newStatus);
++}
+Index: project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableService.java b/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableService.java
+new file mode 100644
+--- /dev/null	
++++ b/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableService.java	
+@@ -0,0 +1,40 @@
++package com.example.projectc1023i1.service.product.impl;
++
++import com.example.projectc1023i1.model.product.Table;
++import com.example.projectc1023i1.repository.product.ITableRepository;
++import com.example.projectc1023i1.service.product.ITableService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++import java.util.List;
++
++@Service
++public class TableService implements ITableService {
++    @Autowired
++    private ITableRepository tableRepository;
++
++    @Override
++    public List<Table> findAllTable() {
++        return tableRepository.findAllTable();
++    }
++
++    @Override
++    public Table findTableByCode(String tableCode) {
++        return tableRepository.findTableByCode(tableCode);
++    }
++
++    @Override
++    public List<Table> findTableByStatus(boolean status) {
++        return tableRepository.findTableByStatus(status);
++    }
++
++    @Override
++    public boolean deleteTableById(int tableId) {
++        return tableRepository.deleteTableById(tableId);
++    }
++
++    @Override
++    public void updateTableById(Long tableId, boolean newStatus) {
++        tableRepository.updateTableById(tableId,newStatus);
++    }
++}

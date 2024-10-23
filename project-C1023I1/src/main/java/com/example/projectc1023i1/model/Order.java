@@ -33,5 +33,5 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "table_id",referencedColumnName = "table_id")
-    private com.example.projectc1023i1.model.Table table;
+    private com.example.projectc1023i1.model.product.Table table;
 }

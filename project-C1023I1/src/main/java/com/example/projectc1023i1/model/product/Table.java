@@ -1,6 +1,7 @@
-package com.example.projectc1023i1.model;
+package com.example.projectc1023i1.model.product;
 
 
+import com.example.projectc1023i1.model.Order;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

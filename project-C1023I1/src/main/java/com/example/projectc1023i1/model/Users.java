@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.model;
 
+import com.example.projectc1023i1.model.product.Table;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

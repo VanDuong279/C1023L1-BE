@@ -1,0 +1,98 @@
+Index: project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/TableRepository.java
+===================================================================
+diff --git a/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/TableRepository.java b/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/TableRepository.java
+--- a/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/TableRepository.java	
++++ b/project-C1023I1/src/main/java/com/example/projectc1023i1/repository/product/TableRepository.java	
+@@ -4,4 +4,5 @@
+ import org.springframework.data.jpa.repository.JpaRepository;
+ 
+ public interface TableRepository extends JpaRepository<Table,Integer> {
++
+ }
+Index: project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableServiceImpl.java
+===================================================================
+diff --git a/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableServiceImpl.java b/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableServiceImpl.java
+--- a/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableServiceImpl.java	
++++ b/project-C1023I1/src/main/java/com/example/projectc1023i1/service/product/impl/TableServiceImpl.java	
+@@ -37,4 +37,6 @@
+     public void deleteById(int id) {
+         tableRepository.deleteById(id);
+     }
++
++
+ }
+Index: .idea/compiler.xml
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+--- a/.idea/compiler.xml	
++++ b/.idea/compiler.xml	
+@@ -7,7 +7,7 @@
+         <processorPath useClasspath="false">
+           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.34/ec547ef414ab1d2c040118fb9c1c265ada63af14/lombok-1.18.34.jar" />
+         </processorPath>
+-        <module name="project-C1023I1.main" />
++        <module name="com.example.project-C1023I1.main" />
+       </profile>
+     </annotationProcessing>
+   </component>
+Index: .idea/C1023L1-BE.iml
+===================================================================
+diff --git a/.idea/C1023L1-BE.iml b/.idea/C1023L1-BE.iml
+--- a/.idea/C1023L1-BE.iml	
++++ b/.idea/C1023L1-BE.iml	
+@@ -6,4 +6,7 @@
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
++  <component name="SonarLintModuleSettings">
++    <option name="uniqueId" value="76444c35-72c7-4a35-9ca5-56b76eb020a8" />
++  </component>
+ </module>
+\ No newline at end of file
+Index: .idea/gradle.xml
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	
++++ b/.idea/gradle.xml	
+@@ -4,8 +4,11 @@
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>
++        <option name="delegatedBuild" value="true" />
++        <option name="testRunner" value="GRADLE" />
++        <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$/project-C1023I1" />
+-        <option name="gradleJvm" value="openjdk-21" />
++        <option name="gradleJvm" value="corretto-17" />
+         <option name="modules">
+           <set>
+             <option value="$PROJECT_DIR$/project-C1023I1" />
+Index: .idea/misc.xml
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	
++++ b/.idea/misc.xml	
+@@ -4,7 +4,7 @@
+   <component name="FrameworkDetectionExcludesConfiguration">
+     <file type="web" url="file://$PROJECT_DIR$/project-C1023I1" />
+   </component>
+-  <component name="ProjectRootManager">
++  <component name="ProjectRootManager" version="2" project-jdk-name="corretto-11" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/modules/project-C1023I1.main.iml
+===================================================================
+diff --git a/.idea/modules/project-C1023I1.main.iml b/.idea/modules/project-C1023I1.main.iml
+--- a/.idea/modules/project-C1023I1.main.iml	
++++ b/.idea/modules/project-C1023I1.main.iml	
+@@ -5,4 +5,7 @@
+       <sourceFolder url="file://$MODULE_DIR$/../../project-C1023I1/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
+     </content>
+   </component>
++  <component name="SonarLintModuleSettings">
++    <option name="uniqueId" value="7f68eeab-78c2-4ae7-8139-c57b6b3155f8" />
++  </component>
+ </module>
+\ No newline at end of file

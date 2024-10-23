@@ -1,8 +1,9 @@
-package com.example.projectc1023i1.service.table.impl;
+package com.example.projectc1023i1.service.product.impl;
 
-import com.example.projectc1023i1.model.Table;
-import com.example.projectc1023i1.repository.ITableRepository;
 
+import com.example.projectc1023i1.model.product.Table;
+import com.example.projectc1023i1.repository.product.ITableRepository;
+import com.example.projectc1023i1.service.product.ITableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +31,11 @@ public class TableService implements ITableService {
 
     @Override
     public boolean deleteTableById(int tableId) {
-           return tableRepository.deleteTableById(tableId);
+        return tableRepository.deleteTableById(tableId);
     }
 
     @Override
     public void updateTableById(Long tableId, boolean newStatus) {
-           tableRepository.updateTableById(tableId,newStatus);
+        tableRepository.updateTableById(tableId,newStatus);
     }
 }

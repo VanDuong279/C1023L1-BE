@@ -1,13 +1,13 @@
-package com.example.projectc1023i1.repository;
+package com.example.projectc1023i1.repository.product;
 
-import com.example.projectc1023i1.model.Table;
+
+import com.example.projectc1023i1.model.product.Table;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 @Repository
 public interface ITableRepository extends JpaRepository<Table,Integer> {
     @Query(value = "select t.id as tableId, t.code as tableCode, t.status as tableStatus from Table as t")
@@ -27,6 +27,9 @@ public interface ITableRepository extends JpaRepository<Table,Integer> {
 
     @Query(value = "UPDATE Table t SET t.status = :newStatus WHERE t.id = :tableId")
     void updateTableById(@Param("tableId") Long tableId, @Param("newStatus") boolean newStatus);
+
+
+
 
 
 
