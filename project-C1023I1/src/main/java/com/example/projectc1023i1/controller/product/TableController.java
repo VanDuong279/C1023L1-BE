@@ -2,12 +2,11 @@ package com.example.projectc1023i1.controller.product;
 
 
 import com.example.projectc1023i1.model.product.Table;
-import com.example.projectc1023i1.service.product.ITableService;
+import com.example.projectc1023i1.service.product.TableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TableController {
     @Autowired
-    private ITableService tableService;
+    private TableService tableService;
 
     @GetMapping("/get_table")
     public ResponseEntity<List<Table>> findAllTable(){

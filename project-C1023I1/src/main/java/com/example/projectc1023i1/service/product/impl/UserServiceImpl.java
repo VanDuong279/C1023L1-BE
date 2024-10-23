@@ -1,7 +1,6 @@
 package com.example.projectc1023i1.service.product.impl;
 
 import com.example.projectc1023i1.Dto.product.UserDTO;
-import com.example.projectc1023i1.model.product.Role;
 import com.example.projectc1023i1.model.product.User;
 import com.example.projectc1023i1.repository.product.RoleRepository;
 import com.example.projectc1023i1.repository.product.UserRepository;
