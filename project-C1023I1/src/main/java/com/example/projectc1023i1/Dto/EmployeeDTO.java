@@ -15,11 +15,10 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeDTO {
-    private  String url;
-
+    private String imgUrl;
     @NotBlank(message = "Khonng duoc de trong ten")
     private String fullName;
-    @NotBlank(message = "Khonng duoc de trong ten")
+    @NotBlank(message = "Khonng duoc de trong dia chi")
     private String address;
 
     @DateTimeFormat(pattern = "yyyy/MM/dd")
@@ -51,5 +50,22 @@ public class EmployeeDTO {
     private Boolean isActive;
 
     private Integer roleId;
+    @Override
+    public String toString() {
+        return "EmployeeDTO{" +
+                "url='" + imgUrl + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", address='" + address + '\'' +
+                ", birthday=" + birthday +
+                ", numberphone='" + numberphone + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", gender=" + gender +
+                ", salary=" + salary +
+                ", isActive=" + isActive +
+                ", roleId=" + roleId +
+                '}';
+    }
 
 }

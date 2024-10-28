@@ -12,11 +12,12 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "SendCode")
+@Table(name = "send_code")
 public class SendCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
+
 
     private String checkCode;
 

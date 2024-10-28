@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.service.user.impl;
 
 import com.example.projectc1023i1.Dto.EmployeeDTO;
+import com.example.projectc1023i1.Dto.EmployeeUpdateDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.component.JwtTokenUtils;
 import com.example.projectc1023i1.model.Roles;
@@ -114,7 +115,7 @@ public class UserService implements IUserService {
      * @return tra ve true neu tai khoan nay ton tai, nguoc lai la false
      */
     @Override
-    public boolean checkNumberphone(String phoneNumber) {
+    public boolean exitsNumberphone(String phoneNumber) {
         if (userRepo.existsByNumberphone(phoneNumber)) {
             return true;
         }
@@ -178,7 +179,7 @@ public class UserService implements IUserService {
      * @return true neu ton tai false  neu khong ton tai
      */
     @Override
-    public boolean checkUsername(String username) {
+    public boolean exitsUsername(String username) {
         if (userRepo.existsByUsername(username)) {
             return true;
         }
@@ -211,18 +212,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Users save(EmployeeDTO employeeDTO, Integer id) {
-        Users users;
+    public Users save(EmployeeDTO employeeDTO) {
+        System.out.println("Dữ liệu nhận được từ frontend: " + employeeDTO);
 
-        // Nếu id != null, tìm kiếm user để cập nhật, ngược lại tạo mới
-        if (id != null) {
-            users = userRepo.findById(id).orElse(null);
-            if (users == null) {
-                throw new RuntimeException("User với id này không tồn tại");
-            }
-        } else {
-            users = new Users(); // Tạo mới
-        }
+        Users users=new Users();
+
+
 
         // Gán các thuộc tính từ EmployeeDTO sang Users
         users.setFullName(employeeDTO.getFullName() != null ? employeeDTO.getFullName() : "");
@@ -236,6 +231,8 @@ public class UserService implements IUserService {
         if (employeeDTO.getBirthday() != null) {
             users.setBirthday(employeeDTO.getBirthday());
         }
+        // Set imgUrl (lưu ảnh)
+        users.setImgUrl(employeeDTO.getImgUrl());
 
         users.setSalary(employeeDTO.getSalary() != null ? employeeDTO.getSalary() : 0.0);
 
@@ -262,6 +259,52 @@ public class UserService implements IUserService {
         // Lưu user và trả về đối tượng đã lưu
         return userRepo.save(users);
     }
+
+    @Override
+    public Users update(EmployeeUpdateDTO employeeUpdateDTO, Integer id) {
+        Users users = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User với id này không tồn tại"));
+
+
+        // Gán các thuộc tính từ EmployeeDTO sang Users
+        users.setFullName(employeeUpdateDTO.getFullName() != null ? employeeUpdateDTO.getFullName() : "");
+        users.setAddress(employeeUpdateDTO.getAddress() != null ? employeeUpdateDTO.getAddress() : "");
+        users.setEmail(employeeUpdateDTO.getEmail());
+        users.setNumberphone(employeeUpdateDTO.getNumberphone());
+        users.setUsername(employeeUpdateDTO.getUsername());
+        users.setIsActive(employeeUpdateDTO.getIsActive() != null ? employeeUpdateDTO.getIsActive() : true);
+        users.setGender(employeeUpdateDTO.getGender());
+
+        if (employeeUpdateDTO.getBirthday() != null) {
+            users.setBirthday(employeeUpdateDTO.getBirthday());
+        }
+        // Set imgUrl (lưu ảnh)
+        users.setImgUrl(employeeUpdateDTO.getImgUrl());
+
+        users.setSalary(employeeUpdateDTO.getSalary() != null ? employeeUpdateDTO.getSalary() : 0.0);
+
+        // Nếu roleId không được cung cấp, đặt mặc định là "ROLE_USER"
+        Roles roles = null;
+        if (employeeUpdateDTO.getRoleId() == null) {
+            roles = roleRepo.findByRoleName("ROLE_USER");
+            if (roles == null) {
+                throw new RuntimeException("Role mặc định 'ROLE_USER' không tồn tại");
+            }
+        } else {
+            roles = roleRepo.findById(employeeUpdateDTO.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Role không tồn tại."));
+        }
+
+        users.setRole(roles);
+
+        // Mã hóa mật khẩu nếu có password
+        if (employeeUpdateDTO.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(employeeUpdateDTO.getPassword());
+            users.setPassword(encodedPassword);
+        }
+
+        // Lưu user và trả về đối tượng đã lưu
+        return userRepo.save(users); }
 
 
     @Override

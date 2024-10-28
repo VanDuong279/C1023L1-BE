@@ -1,12 +1,21 @@
 package com.example.projectc1023i1.model.product;
 
 import com.example.projectc1023i1.model.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @jakarta.persistence.Table(name = "`order`")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,13 +41,9 @@ public class Order {
     private Table table;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private Users user;
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
     public void setDayCreate(LocalDateTime dayCreate) {
         this.dayCreate = dayCreate;
     }
@@ -102,4 +107,5 @@ public class Order {
     public Users getUser() {
         return user;
     }
+
 }
