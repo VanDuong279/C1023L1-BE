@@ -22,6 +22,9 @@ public class Table {
     @Column(name = "status")
     private boolean status;
 
+    @Column(name = "table_name")
+    private String tableName;
+
     @OneToOne(mappedBy = "table", cascade = CascadeType.ALL)
     private CallServiceRequest callServiceRequest;
 

@@ -28,12 +28,8 @@ import java.time.LocalDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<<<<<<< HEAD
     @Column(name = "product_id")
     private int productId;
-=======
-    private Integer productId;
->>>>>>> origin/main
 
     @Column(length = 30, nullable = false)
     private String productCode;

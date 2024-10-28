@@ -2,11 +2,19 @@ package com.example.projectc1023i1.model.product;
 
 import com.example.projectc1023i1.model.Users;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @jakarta.persistence.Table(name = "`order`")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,35 +42,5 @@ public class Order {
     @JoinColumn(name = "user_id")
     private Users user;
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
 
-    public void setDayCreate(LocalDateTime dayCreate) {
-        this.dayCreate = dayCreate;
-    }
-
-    public void setDayUpdate(LocalDateTime dayUpdate) {
-        this.dayUpdate = dayUpdate;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setShippingDay(LocalDateTime shippingDay) {
-        this.shippingDay = shippingDay;
-    }
-
-    public void setTotalMoneyOrder(double totalMoneyOrder) {
-        this.totalMoneyOrder = totalMoneyOrder;
-    }
-
-    public void setTable(Table table) {
-        this.table = table;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
 }
