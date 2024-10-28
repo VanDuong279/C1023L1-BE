@@ -5,6 +5,9 @@ import com.example.projectc1023i1.model.product.Table;
 import com.example.projectc1023i1.service.product.TableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,31 +23,39 @@ public class TableController {
     private TableService tableService;
 
     @GetMapping("/get_table")
-    public ResponseEntity<List<Table>> findAllTable(){
-        List<Table> tableList = tableService.findAllTable();
+    public ResponseEntity<List<Table>> findAllTable(@RequestParam(defaultValue = "0",required = false) int page
+                                                    ){
+        Pageable pageable= PageRequest.of(page,4);
+        Page<Table> tableList = tableService.findAllTable(pageable);
         if(tableList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(tableList,HttpStatus.OK);
+            return new ResponseEntity<>(tableList.getContent(),HttpStatus.OK);
         }
     }
 
-    @GetMapping("/getTableByCode")
-    public ResponseEntity<Table> findTableByCode(@PathVariable ("code" )String code){
-        Table table=tableService.findTableByCode(code);
-        if (table== null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(table, HttpStatus.OK);
-        }
-    }
-    @GetMapping("/getAllTableByStatus")
-    public ResponseEntity<List<Table>> findAllTableByStatus(@PathVariable ("status" )boolean status){
-        List<Table> tableList = tableService.findTableByStatus(status);
-        if(tableList.isEmpty()) {
+    @GetMapping("/getTableByCode/{code}")
+    public ResponseEntity<List<Table>> findTableByCode(@PathVariable("code") String code,
+                                                      @RequestParam(defaultValue = "0", required = false) int page) {
+        Pageable pageable = PageRequest.of(page, 4);
+        Page<Table> tablePage = tableService.findTableByCode(code, pageable);
+
+        if (tablePage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(tableList,HttpStatus.OK);
+            return new ResponseEntity<>(tablePage.getContent(), HttpStatus.OK);
+        }
+    }
+    @GetMapping("/getAllTableByStatus/{status}")
+    public ResponseEntity<List<Table>> findAllTableByStatus(@PathVariable("status") boolean status,
+                                                                  @RequestParam(defaultValue = "0", required = false) int page) {
+        Pageable pageable = PageRequest.of(page, 4);
+        Page<Table> tablePage = tableService.findTableByStatus(status, pageable);
+
+        if (tablePage.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(tablePage.getContent(), HttpStatus.OK); // Trả về danh sách bảng
         }
     }
 
