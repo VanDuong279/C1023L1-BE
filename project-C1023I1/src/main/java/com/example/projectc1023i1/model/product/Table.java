@@ -21,6 +21,9 @@ public class Table {
     @Column(name = "table_code", nullable = false) // Không được null nếu cần
     private String code;
 
+    @Column(name = "table_name", nullable = false) // Không được null nếu cần
+    private String tableName;
+
     @Column(name = "status", nullable = false)
     private boolean status;
 

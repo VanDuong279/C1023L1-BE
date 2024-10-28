@@ -274,4 +274,11 @@ public class LoginController {
         int a = 10;
         return ResponseEntity.status(HttpStatus.OK).body("hello");
     }
+
+
+    @PostMapping("/saveUser")
+    public ResponseEntity<?> save (@Valid @RequestBody UserDTO userDTO) {
+        userService.createUser(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("da hoan thanh");
+    }
 }

@@ -2,12 +2,12 @@ package com.example.projectc1023i1.service.bill;
 
 
 import com.example.projectc1023i1.Dto.bill.OrderDTO;
-import com.example.projectc1023i1.entity.Order;
-import com.example.projectc1023i1.entity.OrderDetails;
+import com.example.projectc1023i1.model.product.Order;
+import com.example.projectc1023i1.model.product.OrderDetails;
+import com.example.projectc1023i1.repository.IUserRepository;
 import com.example.projectc1023i1.repository.bill.IOrderDetailsRepository;
 import com.example.projectc1023i1.repository.bill.IOrderRepository;
 import com.example.projectc1023i1.repository.bill.ITableRepository;
-import com.example.projectc1023i1.repository.bill.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +53,7 @@ public class OrderService {
     private OrderDTO convertToDTO(Order order) {
         OrderDTO dto = new OrderDTO();
         dto.setOrderId(order.getOrderId());
-        dto.setDayCreate(order.getDayCreate());
+        dto.setDayCreate(LocalDate.from(order.getDayCreate()));
         dto.setCreatorName(order.getUser().getFullName());
         dto.setTableName(order.getTable().getTableName());
         dto.setTotalMoneyOrder(order.getTotalMoneyOrder());

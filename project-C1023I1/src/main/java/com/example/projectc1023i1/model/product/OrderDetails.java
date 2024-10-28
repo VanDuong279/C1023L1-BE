@@ -3,11 +3,17 @@ package com.example.projectc1023i1.model.product;
 import com.example.projectc1023i1.model.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Setter
+@Getter
+@AllArgsConstructor
 @jakarta.persistence.Table(name = "order_details")
 public class OrderDetails {
 
@@ -43,6 +49,10 @@ public class OrderDetails {
     @ManyToOne
     @JoinColumn(name = "table_id") // Chỉ rõ khóa ngoại
     private Table table;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")  // Tên cột trong cơ sở dữ liệu
+    private Order order;
 
     public LocalDateTime getCallOrderTime() {
         return callOrderTime;
