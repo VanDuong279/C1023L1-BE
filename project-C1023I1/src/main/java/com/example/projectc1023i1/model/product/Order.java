@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.model.product;
 
 import com.example.projectc1023i1.model.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class Order {
     private Table table;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private Users user;
 
