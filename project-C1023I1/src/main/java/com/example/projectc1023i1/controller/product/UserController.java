@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.controller.product;
 
 import com.example.projectc1023i1.Dto.EmployeeDTO;
+import com.example.projectc1023i1.Dto.EmployeeUpdateDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.service.user.IUserService;
@@ -54,6 +55,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO, BindingResult bindingResult) {
         System.out.println("Received salary: " + employeeDTO.getSalary());
+
         // Kiểm tra xem có lỗi validation hay không
         if (bindingResult.hasErrors()) {
             // Trả về danh sách các thông báo lỗi gọn gàng
@@ -64,7 +66,7 @@ public class UserController {
         }
 
         // Nếu không có lỗi, tiếp tục thêm mới
-        Users createdUser = userService.save(employeeDTO, null); // id là null cho tạo mới
+        Users createdUser = userService.save(employeeDTO); // id là null cho tạo mới
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
@@ -72,7 +74,7 @@ public class UserController {
      * Update 1 user
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable Integer id, @Valid @RequestBody EmployeeDTO employeeDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> updateEmployee(@PathVariable Integer id, @Valid @RequestBody EmployeeUpdateDTO employeeUpdateDTO, BindingResult bindingResult) {
         // Kiểm tra xem có lỗi validation hay không
         if (bindingResult.hasErrors()) {
             // Trả về danh sách các thông báo lỗi gọn gàng
@@ -83,7 +85,7 @@ public class UserController {
         }
 
         // Nếu không có lỗi, tiếp tục cập nhật
-        Users updatedUser = userService.save(employeeDTO, id); // Sử dụng phương thức save cho cập nhật
+        Users updatedUser = userService.update(employeeUpdateDTO, id); // Sử dụng phương thức save cho cập nhật
         if (updatedUser != null) {
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }
