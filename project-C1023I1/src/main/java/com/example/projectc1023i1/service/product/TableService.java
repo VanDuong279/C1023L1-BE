@@ -16,6 +16,7 @@ public interface TableService {
     Table findTableByCode(@Param("table_code") String tableCode);
     List<Table> findTableByStatus(@Param("status") boolean status);
     boolean deleteTableById(@Param("tableId") int tableId);
-    void updateTableById(@Param("tableId") Long tableId, @Param("newStatus") boolean newStatus);
+    boolean updateTableById(@Param("tableId") Long tableId, @Param("newStatus") boolean newStatus);
+    void createTable();
 }
 

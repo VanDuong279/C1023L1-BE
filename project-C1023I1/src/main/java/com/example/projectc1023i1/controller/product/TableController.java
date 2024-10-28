@@ -1,4 +1,4 @@
-package com.example.projectc1023i1.controller;
+package com.example.projectc1023i1.controller.product;
 
 
 import com.example.projectc1023i1.model.product.Table;
@@ -48,10 +48,8 @@ public class TableController {
         }
     }
 
-
-
-@DeleteMapping("/delete/{id}")
-public ResponseEntity<String> delete(@PathVariable("id") int id) {
+      @DeleteMapping("/delete/{id}")
+  public ResponseEntity<String> delete(@PathVariable("id") int id) {
     boolean isDeleted = tableService.deleteTableById(id);
 
     if (isDeleted) {
@@ -61,6 +59,29 @@ public ResponseEntity<String> delete(@PathVariable("id") int id) {
                 .body("Table with ID " + id + " not found.");
     }
 }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateTable(@PathVariable("id") Long tableId, @RequestParam boolean newStatus) {
+        boolean isUpdated = tableService.updateTableById(tableId, newStatus);
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Table with ID " + tableId + " has been updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Table with ID " + tableId + " not found.");
+        }
+    }
+    @PostMapping("/create")
+    public ResponseEntity<String> createTable() {
+        try {
+            tableService.createTable();
+            return ResponseEntity.ok("Table has been created successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error occurred while creating the table: " + e.getMessage());
+        }
+    }
+
 
 
 

@@ -36,4 +36,52 @@ public class TableServiceImpl implements TableService {
     public void deleteById(int id) {
         tableRepository.deleteById(id);
     }
+
+    @Override
+    public List<Table> findAllTable() {
+        return tableRepository.findAllTable();
+    }
+
+    @Override
+    public Table findTableByCode(String tableCode) {
+        return tableRepository.findTableByCode(tableCode);
+    }
+
+    @Override
+    public List<Table> findTableByStatus(boolean status) {
+        return tableRepository.findTableByStatus(status);
+    }
+
+    @Override
+    public boolean deleteTableById(int tableId) {
+        try {
+            if (tableRepository.existsById(tableId)) {
+                tableRepository.deleteById(tableId);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateTableById(Long tableId, boolean newStatus) {
+        try {
+            tableRepository.updateTableById(tableId, newStatus);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+
+    @Override
+    public void createTable() {
+           tableRepository.createTable();
+    }
+
+
 }
