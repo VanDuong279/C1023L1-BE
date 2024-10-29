@@ -195,8 +195,8 @@ public class LoginController {
 
     /**
      *  gui ma code den email nguoi tao tai khoan
-     * @param userDTO chứa thông tin của người của người dùng tạo tài khoản
-     * @param bindingResult chứa kết quả của quá trình validate và ràng buộc dữ liệu
+//     * @param userDTO chứa thông tin của người của người dùng tạo tài khoản
+//     * @param bindingResult chứa kết quả của quá trình validate và ràng buộc dữ liệu
      * @return tra ve (400) neu qua trinh validate du lieu xay ra sai va qua trinh kiem tra du lieu
      *         tra ve (400) neu nhu tai khoan da ton tai
      *         tra ve (400) neu nhu numberphone da ton tai
@@ -273,5 +273,12 @@ public class LoginController {
     public ResponseEntity<?> hello(@Valid @RequestParam("id") Integer id) {
         int a = 10;
         return ResponseEntity.status(HttpStatus.OK).body("hello");
+    }
+
+
+    @PostMapping("/saveUser")
+    public ResponseEntity<?> save (@Valid @RequestBody UserDTO userDTO) {
+        userService.createUser(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("da hoan thanh");
     }
 }

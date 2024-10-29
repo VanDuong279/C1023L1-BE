@@ -28,7 +28,6 @@ public class Product {
 
     @Column(name = "product_id")
     private int productId;
-    
     @Column(length = 30, nullable = false)
     private String productCode;
 

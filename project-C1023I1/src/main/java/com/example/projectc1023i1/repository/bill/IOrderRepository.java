@@ -1,18 +1,19 @@
-package com.example.projectc1023i1.repository.product;
+package com.example.projectc1023i1.repository.bill;
 
 import com.example.projectc1023i1.model.product.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-public interface OrderRepository extends JpaRepository<Order,Integer> {
+@Repository
+public interface IOrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findByOrderId(Integer id);
-    List<Order> findByDayCreate(LocalDateTime dayCreate);
+    List<Order> findByDayCreate(LocalDate dayCreate);
 
     @Query("SELECT SUM(o.totalMoneyOrder) FROM Order o WHERE o.dayCreate BETWEEN :from AND :to")
-    BigDecimal sumTotalByDate(LocalDateTime from, LocalDateTime to);
+    BigDecimal sumTotalByDate(LocalDate from, LocalDate to);
 }

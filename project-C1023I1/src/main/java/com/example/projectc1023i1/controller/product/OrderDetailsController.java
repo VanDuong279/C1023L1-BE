@@ -1,5 +1,10 @@
 package com.example.projectc1023i1.controller.product;
 
+
+import com.example.projectc1023i1.Dto.product.bill.OrderDTO;
+import com.example.projectc1023i1.Dto.product.income.IncomeDTO;
+import com.example.projectc1023i1.model.product.CallOrderRequest;
+import com.example.projectc1023i1.model.product.CallServiceRequest;
 import com.example.projectc1023i1.Dto.product.CallOrderRequestDto;
 import com.example.projectc1023i1.Dto.product.CallServiceRequestDto;
 import com.example.projectc1023i1.Dto.product.OrderDetailsDto;
@@ -9,17 +14,20 @@ import com.example.projectc1023i1.repository.product.NotificationRepository;
 import com.example.projectc1023i1.service.product.CallOrderRequestService;
 import com.example.projectc1023i1.service.product.OrderDetailsService;
 import com.example.projectc1023i1.service.product.TableService;
+
 import com.example.projectc1023i1.service.product.impl.IProductService;
 import com.example.projectc1023i1.service.product.impl.ProductService;
 import com.example.projectc1023i1.service.user.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import com.example.projectc1023i1.service.product.impl.IncomeService;
+import com.example.projectc1023i1.service.product.impl.OrderService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +52,13 @@ public class OrderDetailsController {
     @Autowired
     private NotificationRepository notificationRepository;
 
+
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private IncomeService incomeService;
+
+
     // Lấy danh sách tất cả đơn đặt hàng
     @GetMapping("")
     public ResponseEntity<List<OrderDetails>> getAllOrderDetails() {
@@ -60,6 +75,20 @@ public class OrderDetailsController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(ordersByTable, HttpStatus.OK);
+    }
+    @GetMapping("/bill")
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    // Tìm hóa đơn theo ID
+    @GetMapping("/bill/{id}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Integer id) {
+        OrderDTO orderDetails = orderService.getOrderById(id);
+        if (orderDetails == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
 
     // Thêm một đơn đặt hàng
@@ -177,9 +206,81 @@ public class OrderDetailsController {
         notification.setCreatedAt(LocalDateTime.now());
         notificationRepository.save(notification);
 
+
         return ResponseEntity.ok("Thông báo gọi phục vụ đã được lưu.");
     }
+    // Tìm hóa đơn theo khoảng ngày
+    @GetMapping("/bill/search-by-date")
+    public ResponseEntity<List<OrderDTO>> getOrdersByDate(
+            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime date) {
 
+        List<OrderDTO> orders = orderService.getOrdersByDate(date);
+
+        if (orders.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(orders);
+    }
+
+
+
+    @GetMapping("/income/today")
+    public ResponseEntity<IncomeDTO> getTodayIncome() {
+        IncomeDTO income = incomeService.getTodayIncome();
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập hôm nay
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    }
+
+    @GetMapping("/income/week")
+    public ResponseEntity<IncomeDTO> getThisWeekIncome() {
+        IncomeDTO income = incomeService.getThisWeekIncome();
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tuần này
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    }
+
+    @GetMapping("/income/month")
+    public ResponseEntity<IncomeDTO> getThisMonthIncome() {
+            IncomeDTO income = incomeService.getThisMonthIncome();
+
+            if (income == null) {
+                return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tháng này
+            }
+
+            return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+        }
+    @GetMapping("/income/year")
+    public ResponseEntity<IncomeDTO> getThisYearIncome() {
+        IncomeDTO income = incomeService.getThisYearIncome();
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập năm này
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    }
+
+    @GetMapping("/income/custom")
+    public ResponseEntity<IncomeDTO> getIncomeByDateRange(
+            @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime from,
+            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime to) {
+
+        IncomeDTO income = incomeService.getIncomeByDateRange(from, to);
+
+        if (income == null ) {
+            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập trong khoảng ngày
+        }
+
+        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    }
 
     @PostMapping("/hello")
     public ResponseEntity<?> hello() {

@@ -3,14 +3,23 @@ package com.example.projectc1023i1.model.product;
 import com.example.projectc1023i1.model.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @jakarta.persistence.Table(name = "`order`")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer orderId;
 
     @Column(nullable = false)
@@ -28,7 +37,6 @@ public class Order {
     private double totalMoneyOrder;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "table_id")
     private Table table;
 
@@ -36,11 +44,6 @@ public class Order {
     @JsonIgnore
     @JoinColumn(name = "user_id")
     private Users user;
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
     public void setDayCreate(LocalDateTime dayCreate) {
         this.dayCreate = dayCreate;
     }
@@ -68,4 +71,41 @@ public class Order {
     public void setUser(Users user) {
         this.user = user;
     }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public LocalDateTime getDayCreate() {
+        return dayCreate;
+    }
+
+    public LocalDateTime getDayUpdate() {
+        return dayUpdate;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public LocalDateTime getShippingDay() {
+        return shippingDay;
+    }
+
+    public double getTotalMoneyOrder() {
+        return totalMoneyOrder;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
 }
