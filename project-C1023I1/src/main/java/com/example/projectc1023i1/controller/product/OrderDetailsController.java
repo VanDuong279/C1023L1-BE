@@ -10,21 +10,24 @@ import com.example.projectc1023i1.Dto.product.CallServiceRequestDto;
 import com.example.projectc1023i1.Dto.product.OrderDetailsDto;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.model.product.*;
-import com.example.projectc1023i1.config.NotificationWebSocketHandler;
+import com.example.projectc1023i1.repository.product.NotificationRepository;
 import com.example.projectc1023i1.service.product.CallOrderRequestService;
 import com.example.projectc1023i1.service.product.OrderDetailsService;
 import com.example.projectc1023i1.service.product.TableService;
-import com.example.projectc1023i1.service.product.impl.IncomeService;
-import com.example.projectc1023i1.service.product.impl.OrderService;
+
+import com.example.projectc1023i1.service.product.impl.IProductService;
 import com.example.projectc1023i1.service.product.impl.ProductService;
 import com.example.projectc1023i1.service.user.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.example.projectc1023i1.service.product.impl.IncomeService;
+import com.example.projectc1023i1.service.product.impl.OrderService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,19 +40,24 @@ public class OrderDetailsController {
     @Autowired
     private OrderDetailsService orderDetailsService;
     @Autowired
-    private ProductService  productService;
+    private ProductService productService; // Sử dụng service để lấy sản phẩm từ DB
     @Autowired
-    private TableService tableService; // Sử dụng service để lấy Table từ DB
+    private TableService tableService;
+    @Autowired
+    private IProductService service;
     @Autowired
     private UserService userService;
     @Autowired
     private CallOrderRequestService callOrderRequestService;
     @Autowired
-    private NotificationWebSocketHandler notificationWebSocketHandler;
+    private NotificationRepository notificationRepository;
+
+
     @Autowired
     private OrderService orderService;
     @Autowired
     private IncomeService incomeService;
+
 
     // Lấy danh sách tất cả đơn đặt hàng
     @GetMapping("")
@@ -62,7 +70,7 @@ public class OrderDetailsController {
     @GetMapping("/table/{tableId}")
     public ResponseEntity<List<OrderDetails>> getOrdersByTableId(@PathVariable int tableId) {
         List<OrderDetails> ordersByTable = orderDetailsService.findOrdersByTableId(tableId);
-        System.out.println("Orders retrieved for table " + tableId + ": " + ordersByTable); // Log để kiểm tra
+        System.out.println("Orders retrieved for table " + tableId + ": " + ordersByTable);
         if (ordersByTable.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -86,23 +94,18 @@ public class OrderDetailsController {
     // Thêm một đơn đặt hàng
     @PostMapping("")
     public ResponseEntity<OrderDetails> createOrderDetails(@RequestBody OrderDetailsDto orderDetailsDto) {
-        // Logging để kiểm tra dữ liệu
         System.out.println("OrderDetailsDto: " + orderDetailsDto);
-
-        // Kiểm tra nếu tableId không được cung cấp
         if (orderDetailsDto.getTableId() == null) {
             throw new IllegalArgumentException("Table ID is missing.");
         }
 
-        // Tìm kiếm Table từ ID
         Table table = tableService.findById(orderDetailsDto.getTableId());
         if (table == null) {
             throw new IllegalArgumentException("Invalid Table ID.");
         }
 
-        // Tạo mới đối tượng OrderDetails và gán các giá trị từ DTO
         OrderDetails orderDetails = new OrderDetails();
-        orderDetails.setTable(table);  // Gán Table đã tìm được
+        orderDetails.setTable(table);
         orderDetails.setQuantity(orderDetailsDto.getQuantity());
         orderDetails.setShippingDay(orderDetailsDto.getShippingDay());
         orderDetails.setDayCreate(LocalDateTime.now());
@@ -111,29 +114,23 @@ public class OrderDetailsController {
         orderDetails.setStatus(orderDetailsDto.getStatus());
         orderDetails.setCallOrderTime(orderDetailsDto.getCallOrderTime());
         orderDetails.setCallServiceTime(orderDetailsDto.getCallServiceTime());
-        // Lưu OrderDetails vào cơ sở dữ liệu
-        orderDetailsService.save(orderDetails);
 
-        // Trả về response OK
+        orderDetailsService.save(orderDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
 
     // Xóa một đơn đặt hàng theo ID
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrderDetails(@PathVariable int id) {
-        System.out.println("Deleting order with ID: " + id);  // Thêm log kiểm tra id
+        System.out.println("Deleting order with ID: " + id);
         OrderDetails orderDetails = orderDetailsService.findById(id);
-
         if (orderDetails == null) {
-            System.out.println("Order not found for ID: " + id);  // Log khi không tìm thấy
+            System.out.println("Order not found for ID: " + id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         orderDetailsService.delete(orderDetails);
-        System.out.println("Order deleted successfully for ID: " + id);  // Log khi xoá thành công
+        System.out.println("Order deleted successfully for ID: " + id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -150,80 +147,68 @@ public class OrderDetailsController {
     // Gọi món
     @PostMapping("/call-order")
     public ResponseEntity<String> callOrder(@RequestBody CallOrderRequestDto callOrderRequestDto) {
-        // Tìm Table theo tableId
         Table table = tableService.findById(callOrderRequestDto.getTableId());
         if (table == null) {
             return new ResponseEntity<>("Table không tồn tại", HttpStatus.BAD_REQUEST);
         }
 
-        // Tìm User theo userId
         Users user = userService.findById(callOrderRequestDto.getUserId());
         if (user == null) {
             return new ResponseEntity<>("Người dùng không tồn tại", HttpStatus.BAD_REQUEST);
         }
 
-        // Tạo CallOrderRequest mới và thiết lập các thuộc tính
         CallOrderRequest callOrderRequest = new CallOrderRequest();
-        callOrderRequest.setTable(table); // Liên kết Table
-        callOrderRequest.setUser(user);   // Liên kết User
+        callOrderRequest.setTable(table);
+        callOrderRequest.setUser(user);
 
-        // Ánh xạ danh sách OrderDetails từ DTO sang entity
         List<OrderDetails> orderDetailsList = new ArrayList<>();
         for (OrderDetailsDto dto : callOrderRequestDto.getOrderDetails()) {
             OrderDetails orderDetails = new OrderDetails();
-
-            // Tìm sản phẩm theo productId từ DTO
             Product product = productService.findProductById(dto.getProductId());
             if (product == null) {
                 return new ResponseEntity<>("Product không tồn tại", HttpStatus.BAD_REQUEST);
             }
 
-            // Liên kết với Product
             orderDetails.setProduct(product);
-            orderDetails.setQuantity(dto.getQuantity());       // Lấy số lượng từ DTO
-            orderDetails.setTotalMoneyOrder(dto.getTotalMoneyOrder()); // Lấy tổng tiền từ DTO
-            orderDetails.setShippingDay(dto.getShippingDay()); // Lấy ngày giao hàng từ DTO
-            orderDetails.setStatus(dto.getStatus());           // Lấy trạng thái từ DTO
-            orderDetails.setCallServiceTime(dto.getCallServiceTime()); // Liên kết thời gian gọi phục vụ
-            orderDetails.setCallOrderRequest(callOrderRequest); // Liên kết với CallOrderRequest
-
+            orderDetails.setQuantity(dto.getQuantity());
+            orderDetails.setTotalMoneyOrder(dto.getTotalMoneyOrder());
+            orderDetails.setShippingDay(dto.getShippingDay());
+            orderDetails.setStatus(dto.getStatus());
+            orderDetails.setCallServiceTime(dto.getCallServiceTime());
+            orderDetails.setCallOrderRequest(callOrderRequest);
             orderDetailsList.add(orderDetails);
         }
 
-        // Thêm danh sách orderDetails vào CallOrderRequest
         callOrderRequest.setOrderDetailsList(orderDetailsList);
-
-        // Lưu CallOrderRequest cùng với các OrderDetails
         callOrderRequestService.save(callOrderRequest);
 
-        // Gửi thông báo cho nhân viên
-        try {
-            notificationWebSocketHandler.sendNotification("Bàn " + table.getCode() + " gọi món.");
-            return ResponseEntity.ok("Thông báo gọi món đã được gửi.");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Lỗi khi gửi thông báo.");
-        }
+        // Tạo và lưu thông báo
+        Notification notification = new Notification();
+        notification.setMessage("Bàn " + table.getCode() + " gọi món.");
+        notification.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(notification);
+
+        return ResponseEntity.ok("Thông báo gọi món đã được lưu.");
     }
-
-
 
 
     // Gọi phục vụ
     @PostMapping("/call-service")
     public ResponseEntity<String> callService(@RequestBody CallServiceRequestDto callServiceRequest) {
-        Table table = tableService.findById(callServiceRequest.getTableId()); // Sử dụng đúng phương thức getTableId
+        Table table = tableService.findById(callServiceRequest.getTableId());
         if (table == null) {
             return new ResponseEntity<>("Table không tồn tại", HttpStatus.BAD_REQUEST);
         }
 
-        try {
-            notificationWebSocketHandler.sendNotification("Bàn " + table.getCode() + " yêu cầu phục vụ.");
-            return ResponseEntity.ok("Thông báo gọi phục vụ đã được gửi.");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Lỗi khi gửi thông báo.");
-        }
-    }
+        // Tạo và lưu thông báo
+        Notification notification = new Notification();
+        notification.setMessage("Bàn " + table.getCode() + " yêu cầu phục vụ.");
+        notification.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(notification);
 
+
+        return ResponseEntity.ok("Thông báo gọi phục vụ đã được lưu.");
+    }
     // Tìm hóa đơn theo khoảng ngày
     @GetMapping("/bill/search-by-date")
     public ResponseEntity<List<OrderDTO>> getOrdersByDate(
@@ -264,15 +249,14 @@ public class OrderDetailsController {
 
     @GetMapping("/income/month")
     public ResponseEntity<IncomeDTO> getThisMonthIncome() {
-        IncomeDTO income = incomeService.getThisMonthIncome();
+            IncomeDTO income = incomeService.getThisMonthIncome();
 
-        if (income == null ) {
-            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tháng này
+            if (income == null) {
+                return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tháng này
+            }
+
+            return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
         }
-
-        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
-    }
-
     @GetMapping("/income/year")
     public ResponseEntity<IncomeDTO> getThisYearIncome() {
         IncomeDTO income = incomeService.getThisYearIncome();
@@ -302,5 +286,16 @@ public class OrderDetailsController {
     public ResponseEntity<?> hello() {
         return ResponseEntity.ok("Hello World");
     }
-}
 
+    // Lấy danh sách sản phẩm theo categoryId
+    @GetMapping("/products/category/{categoryId}")
+    public ResponseEntity<Page<Product>> getProductsByCategoryId(
+            @PathVariable int categoryId,
+            Pageable pageable) {
+        Page<Product> products = service.findProductByCategory(categoryId, pageable);
+        if (products.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+}   
