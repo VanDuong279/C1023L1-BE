@@ -88,6 +88,10 @@ public class WebSercurityConfig {
 
                             .requestMatchers(POST,"/api/category/**").hasRole(Roles.USER)
 
+                            .requestMatchers(GET,"/api/table/**").hasAnyRole(ADMIN)
+                            .requestMatchers(PUT,"/api/table/**").hasAnyRole(ADMIN)
+                            .requestMatchers(DELETE,"/api/table/**").hasAnyRole(ADMIN)
+                            .requestMatchers(POST,"/api/table/**").hasAnyRole(ADMIN)
                             // phan quyen cho feedback
 
                             .anyRequest().authenticated()

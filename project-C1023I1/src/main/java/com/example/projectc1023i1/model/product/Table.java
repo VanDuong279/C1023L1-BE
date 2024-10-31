@@ -48,12 +48,29 @@ public class Table {
         this.id = id;
     }
 
+//    public String getTableCode() {
+//        return tableCode;
+//    }
+//
+//    public void setTableCode(String tableCode) {
+//        this.tableCode = tableCode;
+//    }
+
+
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public boolean isStatus() {

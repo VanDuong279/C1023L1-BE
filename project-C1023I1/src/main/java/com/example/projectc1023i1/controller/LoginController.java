@@ -281,4 +281,10 @@ public class LoginController {
         userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.OK).body("da hoan thanh");
     }
+
+    @GetMapping("/hello")
+    public ResponseEntity<?> hello () {
+        return ResponseEntity.ok("hello");
+    }
+
 }
