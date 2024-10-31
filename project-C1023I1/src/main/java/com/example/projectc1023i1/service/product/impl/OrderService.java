@@ -53,7 +53,7 @@ public class OrderService {
         dto.setOrderId(order.getOrderId());
         dto.setDayCreate(order.getDayCreate());
         dto.setCreatorName(order.getUser().getFullName());
-        dto.setTableName(order.getTable().getTableCode());
+        dto.setTableName(order.getTable().getCode());
         dto.setTotalMoneyOrder(order.getTotalMoneyOrder());
         dto.setQuantily(order.getQuantity());
 

@@ -85,7 +85,7 @@ public class TableController {
     @PostMapping("/create")
     public ResponseEntity<String> createTable(@RequestBody Table table) {
         try {
-            tableService.createTable(table.getTableCode(),table.getTableName(),table.isStatus());
+            tableService.createTable(table.getCode(),table.getTableName(),table.isStatus());
             return ResponseEntity.status(HttpStatus.CREATED).body("Table created successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
