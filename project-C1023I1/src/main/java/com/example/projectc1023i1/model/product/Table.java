@@ -19,7 +19,7 @@ public class Table {
     private Integer id;
 
     @Column(name = "table_code", nullable = false) // Không được null nếu cần
-    private String code;
+    private String tableCode;
 
     @Column(name = "table_name", nullable = false) // Không được null nếu cần
     private String tableName;
@@ -48,12 +48,20 @@ public class Table {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getTableCode() {
+        return tableCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setTableCode(String tableCode) {
+        this.tableCode = tableCode;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public boolean isStatus() {

@@ -42,6 +42,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public Page<Table> findAllTable(Pageable pageable) {
+
         return tableRepository.findAllTable(pageable);
     }
 
@@ -70,21 +71,20 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public boolean updateTableById(Long tableId, boolean newStatus) {
-        try {
+    public boolean updateTableById(int tableId, boolean newStatus) {
+        if (tableRepository.existsById(tableId) ){
             tableRepository.updateTableById(tableId, newStatus);
             return true;
-        } catch (Exception e) {
-            return false;
         }
+        return false;
     }
-
-
 
     @Override
-    public void createTable() {
-           tableRepository.createTable();
+    public void createTable(String tableCode, String tableName, boolean status) {
+        tableRepository.createTable(tableCode,tableName,status);
     }
+
+
 
 
 }

@@ -198,7 +198,7 @@ public class OrderDetailsController {
 
         // Gửi thông báo cho nhân viên
         try {
-            notificationWebSocketHandler.sendNotification("Bàn " + table.getCode() + " gọi món.");
+            notificationWebSocketHandler.sendNotification("Bàn " + table.getTableCode() + " gọi món.");
             return ResponseEntity.ok("Thông báo gọi món đã được gửi.");
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Lỗi khi gửi thông báo.");
@@ -217,7 +217,7 @@ public class OrderDetailsController {
         }
 
         try {
-            notificationWebSocketHandler.sendNotification("Bàn " + table.getCode() + " yêu cầu phục vụ.");
+            notificationWebSocketHandler.sendNotification("Bàn " + table.getTableCode() + " yêu cầu phục vụ.");
             return ResponseEntity.ok("Thông báo gọi phục vụ đã được gửi.");
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Lỗi khi gửi thông báo.");

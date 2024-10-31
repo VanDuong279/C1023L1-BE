@@ -22,9 +22,9 @@ public class TableController {
     @Autowired
     private TableService tableService;
 
-    @GetMapping("/get_table")
+    @GetMapping()
     public ResponseEntity<List<Table>> findAllTable(@RequestParam(defaultValue = "0",required = false) int page
-                                                    ){
+    ){
         Pageable pageable= PageRequest.of(page,4);
         Page<Table> tableList = tableService.findAllTable(pageable);
         if(tableList.isEmpty()) {
@@ -34,11 +34,11 @@ public class TableController {
         }
     }
 
-    @GetMapping("/getTableByCode/{code}")
-    public ResponseEntity<List<Table>> findTableByCode(@PathVariable("code") String code,
+    @GetMapping("/code/{table_code}")
+    public ResponseEntity<List<Table>> findTableByCode(@PathVariable("table_code") String table_code,
                                                       @RequestParam(defaultValue = "0", required = false) int page) {
         Pageable pageable = PageRequest.of(page, 4);
-        Page<Table> tablePage = tableService.findTableByCode(code, pageable);
+        Page<Table> tablePage = tableService.findTableByCode(table_code, pageable);
 
         if (tablePage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -46,9 +46,9 @@ public class TableController {
             return new ResponseEntity<>(tablePage.getContent(), HttpStatus.OK);
         }
     }
-    @GetMapping("/getAllTableByStatus/{status}")
+    @GetMapping("/status/{status}")
     public ResponseEntity<List<Table>> findAllTableByStatus(@PathVariable("status") boolean status,
-                                                                  @RequestParam(defaultValue = "0", required = false) int page) {
+                                                            @RequestParam(defaultValue = "0", required = false) int page) {
         Pageable pageable = PageRequest.of(page, 4);
         Page<Table> tablePage = tableService.findTableByStatus(status, pageable);
 
@@ -72,7 +72,7 @@ public class TableController {
 }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateTable(@PathVariable("id") Long tableId, @RequestParam boolean newStatus) {
+    public ResponseEntity<String> updateTable(@PathVariable("id") int tableId, @RequestParam boolean newStatus) {
         boolean isUpdated = tableService.updateTableById(tableId, newStatus);
 
         if (isUpdated) {
@@ -83,10 +83,10 @@ public class TableController {
         }
     }
     @PostMapping("/create")
-    public ResponseEntity<String> createTable() {
+    public ResponseEntity<String> createTable(@RequestBody Table table) {
         try {
-            tableService.createTable();
-            return ResponseEntity.ok("Table has been created successfully.");
+            tableService.createTable(table.getTableCode(),table.getTableName(),table.isStatus());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Table created successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error occurred while creating the table: " + e.getMessage());

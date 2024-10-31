@@ -18,7 +18,7 @@ public interface TableService {
     Page<Table> findTableByCode(@Param("table_code") String tableCode,Pageable pageable);
     Page<Table> findTableByStatus(@Param("status") boolean status,Pageable pageable);
     boolean deleteTableById(@Param("tableId") int tableId);
-    boolean updateTableById(@Param("tableId") Long tableId, @Param("newStatus") boolean newStatus);
-    void createTable();
+    boolean updateTableById(@Param("tableId") int tableId, @Param("newStatus") boolean newStatus);
+    void createTable(String tableCode,String tableName, boolean status);
 }
 
