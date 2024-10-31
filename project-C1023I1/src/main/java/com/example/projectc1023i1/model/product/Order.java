@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer orderId;
 
     @Column(nullable = false)
@@ -43,6 +44,68 @@ public class Order {
     @JsonIgnore
     @JoinColumn(name = "user_id")
     private Users user;
+    public void setDayCreate(LocalDateTime dayCreate) {
+        this.dayCreate = dayCreate;
+    }
 
+    public void setDayUpdate(LocalDateTime dayUpdate) {
+        this.dayUpdate = dayUpdate;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setShippingDay(LocalDateTime shippingDay) {
+        this.shippingDay = shippingDay;
+    }
+
+    public void setTotalMoneyOrder(double totalMoneyOrder) {
+        this.totalMoneyOrder = totalMoneyOrder;
+    }
+
+    public void setTable(Table table) {
+        this.table = table;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public LocalDateTime getDayCreate() {
+        return dayCreate;
+    }
+
+    public LocalDateTime getDayUpdate() {
+        return dayUpdate;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public LocalDateTime getShippingDay() {
+        return shippingDay;
+    }
+
+    public double getTotalMoneyOrder() {
+        return totalMoneyOrder;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public Users getUser() {
+        return user;
+    }
 
 }
