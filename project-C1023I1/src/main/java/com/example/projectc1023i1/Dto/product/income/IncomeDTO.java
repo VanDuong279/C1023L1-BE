@@ -15,6 +15,10 @@ public class IncomeDTO {
         this.totalIncome = totalIncome;
     }
 
+    public IncomeDTO(Double totalIncome) {
+        this.totalIncome = totalIncome;
+    }
+
     public LocalDateTime getDayCreate() {
         return dayCreate;
     }

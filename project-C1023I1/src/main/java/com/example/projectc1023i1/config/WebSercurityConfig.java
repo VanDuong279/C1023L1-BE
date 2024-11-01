@@ -49,10 +49,10 @@ public class WebSercurityConfig {
                 .csrf(AbstractHttpConfigurer:: disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((request)   -> {
-                    request.requestMatchers(
-                                    "**")
 
-                            .permitAll()
+                        request.requestMatchers(
+                                        "**")
+                                .permitAll()
                             // phaan quyen cho user
                             .requestMatchers(POST,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/users/**").hasAnyRole(Roles.ADMIN)

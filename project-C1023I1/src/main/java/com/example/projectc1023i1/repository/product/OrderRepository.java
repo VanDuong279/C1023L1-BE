@@ -16,7 +16,7 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
     List<Order> findByDayCreate(LocalDateTime dayCreate);
 
     @Query("SELECT SUM(o.totalMoneyOrder) FROM Order o WHERE o.dayCreate BETWEEN :from AND :to")
-    BigDecimal sumTotalByDate(LocalDateTime from, LocalDateTime to);
+    Double sumTotalByDate(LocalDateTime from, LocalDateTime to);
     @Query(value = "SELECT HOUR(o.day_create) AS period, SUM(o.total_money_order) AS totalIncome " +
             "FROM `order` o " +
             "WHERE DATE(o.day_create) = CURRENT_DATE " +
@@ -44,12 +44,9 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
             "GROUP BY MONTH(o.day_create)",
             nativeQuery = true)
     List<Object[]> getIncomeByMonthInYear();
-    @Query(value = "SELECT DATE(o.day_create) AS period, SUM(o.total_money_order) AS totalIncome " +
-            "FROM `order` o " +
-            "WHERE o.day_create BETWEEN :startDate AND :endDate " +
-            "GROUP BY DATE(o.day_create)",
-            nativeQuery = true)
-    List<Object[]> getIncomeByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    @Query(value = "SELECT SUM(o.totalMoneyOrder) FROM Order o WHERE o.dayCreate BETWEEN :from AND :to")
+    List<Object[]> getIncomeByDateRange(@Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
+
 
 
 }
