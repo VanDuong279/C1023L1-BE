@@ -8,6 +8,7 @@ import com.example.projectc1023i1.model.Roles;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.repository.IRoleRepo;
 import com.example.projectc1023i1.repository.IUserRepository;
+import com.example.projectc1023i1.respone.UserInforRespone;
 import com.example.projectc1023i1.service.user.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -194,8 +195,24 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserInforRespone converUser(Users users) {
+        return modelMapper.map(users,UserInforRespone.class);
+    }
+
+    @Override
     public Users findByPhone(String phone) {
         return userRepo.findByNumberphone(phone).get();
+    }
+
+    // day la phan thay doi password
+    @Override
+    public void changePassword(Users Users) {
+        userRepo.save(Users);
+    }
+
+    @Override
+    public void updateUsersByImgUrlAndUserId(String imgUrlA, Integer userId) {
+        userRepo.updateUsersByImgUrlAndUserId(imgUrlA, userId);
     }
 
     @Override

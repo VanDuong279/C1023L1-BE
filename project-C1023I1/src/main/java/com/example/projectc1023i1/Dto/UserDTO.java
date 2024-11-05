@@ -44,6 +44,8 @@ public class UserDTO implements Validator {
 
     @NotBlank(message = "Khong duoc de trong password")
     @Size(min = 8, message = "Mat khau phai co it nhat 8 ky tu")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{4,}$",
+            message = "Mật khẩu phải có ít nhất 1 ký tự thường, 1 ký tự hoa, 1 ký tự số, và 1 ký tự đặc biệt")
     private String password;
 
     @NotBlank(message = "Khong duoc de trong email")
@@ -54,6 +56,7 @@ public class UserDTO implements Validator {
     private String email;
 
     private Double salary;
+
 
     private Boolean isActive;
     private  Boolean gender;
