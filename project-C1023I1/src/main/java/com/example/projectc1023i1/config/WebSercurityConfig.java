@@ -21,7 +21,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.projectc1023i1.model.Roles.ADMIN;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
@@ -48,54 +47,31 @@ public class WebSercurityConfig {
 
                 .csrf(AbstractHttpConfigurer:: disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests((request)   -> {
+                .authorizeHttpRequests(request   -> {
+                    request.requestMatchers(
+                                     "**")
 
-                        request.requestMatchers(
-                                        "**")
-                                .permitAll()
-                            // phaan quyen cho user
+                            .permitAll()
+                            .requestMatchers(POST,"/api/product/product/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+
+                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(POST,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(GET,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(PUT,"/api/users/**").hasAnyRole(Roles.ADMIN)
-
-                            // phan quyen cho product
                             .requestMatchers(POST,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(POST,"api/category/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(PATCH,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(GET,"/api/product/checkProductName").hasAnyRole(Roles.ADMIN)
 
-                            // phan quyen cho orders
+
                             .requestMatchers(POST,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(DELETE,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(GET,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(PUT,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
-
-                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(ADMIN)
-
-
-
-                            .requestMatchers(GET,"/api/product/**").hasAnyRole(ADMIN)
-                            .requestMatchers(POST,"/api/product/**").hasAnyRole(ADMIN)
-                            .requestMatchers(DELETE,"/api/product/**").hasAnyRole(ADMIN)
-                            .requestMatchers(PATCH,"/api/product/**").hasAnyRole(ADMIN)
-
-                            .requestMatchers(POST,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
-                            .requestMatchers(DELETE,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
-                            .requestMatchers(GET,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
-                            .requestMatchers(PUT,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
-                            .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
-
-                            .requestMatchers(POST,"/api/category/**").hasRole(Roles.USER)
-                            .requestMatchers(POST,"/api/verify/**").hasRole(Roles.USER)
-
-                            .requestMatchers(GET,"/api/upload-image-user").hasRole(Roles.USER)
-
-                            .requestMatchers(GET,"/api/table/**").hasAnyRole(ADMIN)
-                            .requestMatchers(PUT,"/api/table/**").hasAnyRole(ADMIN)
-                            .requestMatchers(DELETE,"/api/table/**").hasAnyRole(ADMIN)
-                            .requestMatchers(POST,"/api/table/**").hasAnyRole(ADMIN)
-                            // phan quyen cho feedback
+                            .requestMatchers(GET,"/api/feedbacks/**").hasAnyRole(Roles.ADMIN, Roles.USER)
 
                             .anyRequest().authenticated()
                     ;
@@ -109,11 +85,10 @@ public class WebSercurityConfig {
             @Override
             public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("*")); // cho phép tất cả domain gửi yêu cầu
-                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                // cho phép cái http nhất định đi qua
-                configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-                configuration.setExposedHeaders(List.of("x-auth-token")); // liệt kê các header mà front end có thể truycaapjpj từ phản hồi
+                configuration.setAllowedOrigins(List.of("*")); // Cho phép tất cả các domain gửi yêu cầu
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // Cho phép các phương thức HTTP nhất định
+                configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token")); // Thêm "token" vào danh sách các header được phép
+                configuration.setExposedHeaders(List.of("x-auth-token")); // Liệt kê các header mà frontend có thể truy cập từ phản hồi
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                 // tạo 1 nguồn cấu hình CORS dựa trên URl
                 source.registerCorsConfiguration("/**", configuration);// dùng đ cấu hình CORS cho tất cả đường dẫn

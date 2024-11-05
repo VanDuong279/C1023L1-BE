@@ -1,7 +1,9 @@
 package com.example.projectc1023i1.model.product;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -11,23 +13,25 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-
 import java.time.LocalDateTime;
-import java.util.List;
 
+/**
+ * Đây là mô tả của lớp Product
+ * @author VuNH
+ * @since 2024-10-13
+ */
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
 @Table(name = "product")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer productId;
 
-    @Column(name = "product_id")
-    private int productId;
     @Column(length = 30, nullable = false)
     private String productCode;
 
@@ -52,12 +56,8 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-//    @JsonIgnore
-    @JsonManagedReference
+//    @JsonIgnore // Ngăn chặn serialization vòng lặp
+//    @JsonManagedReference
     private Category category;
 
-    // Mối quan hệ với OrderDetails
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore // Tránh serialization vòng lặp
-    private List<OrderDetails> orderDetailsList;
 }

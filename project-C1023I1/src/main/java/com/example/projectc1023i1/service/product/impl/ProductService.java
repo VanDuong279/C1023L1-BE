@@ -74,4 +74,12 @@ public class ProductService implements IProductService {
     public boolean existProductName(String productName) {
         return productRepository.existsProductByProductName(productName);
     }
+
+    @Override
+    public String generateNextProductCode() {
+        Integer maxProductNumber = productRepository.findMaxProductCode();
+        int nextNumber = (maxProductNumber != null) ? maxProductNumber + 1 : 1;
+
+        return String.format("PR-%d", nextNumber);
+    }
 }
