@@ -5,6 +5,7 @@ import com.example.projectc1023i1.model.product.Table;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class OrderDTO {
     private Integer orderId;
@@ -12,31 +13,22 @@ public class OrderDTO {
     private String creatorName;
     private String tableName;
     private Double totalMoneyOrder;
-    private String productName;
-    private Double productPrice;
+    private List<String> productDetails;
     private Integer quantily;
+
 
     // Constructors, Getters and Setters
 
     public OrderDTO() {
     }
 
-    public OrderDTO(Integer orderId, LocalDateTime dayCreate, String creatorName, String tableName, Double totalMoneyOrder) {
+    public OrderDTO(Integer orderId, LocalDateTime dayCreate, String creatorName, String tableName, Double totalMoneyOrder, List<String> productDetails, Integer quantily) {
         this.orderId = orderId;
         this.dayCreate = dayCreate;
         this.creatorName = creatorName;
         this.tableName = tableName;
         this.totalMoneyOrder = totalMoneyOrder;
-    }
-
-    public OrderDTO(Integer orderId, LocalDateTime dayCreate, String creatorName, String tableName, Double totalMoneyOrder, String productName, Double productPrice, Integer quantily) {
-        this.orderId = orderId;
-        this.dayCreate = dayCreate;
-        this.creatorName = creatorName;
-        this.tableName = tableName;
-        this.totalMoneyOrder = totalMoneyOrder;
-        this.productName = productName;
-        this.productPrice = productPrice;
+        this.productDetails = productDetails;
         this.quantily = quantily;
     }
 
@@ -80,20 +72,12 @@ public class OrderDTO {
         this.totalMoneyOrder = totalMoneyOrder;
     }
 
-    public String getProductName() {
-        return productName;
+    public List<String> getProductDetails() {
+        return productDetails;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public Double getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(Double productPrice) {
-        this.productPrice = productPrice;
+    public void setProductDetails(List<String> productDetails) {
+        this.productDetails = productDetails;
     }
 
     public Integer getQuantily() {
@@ -103,5 +87,4 @@ public class OrderDTO {
     public void setQuantily(Integer quantily) {
         this.quantily = quantily;
     }
-
 }
