@@ -1,7 +1,6 @@
 package com.example.projectc1023i1.Dto;
 
-import com.example.projectc1023i1.Validation.SalaryMultiple;
-import com.example.projectc1023i1.Validation.UniqueUsername;
+import com.example.projectc1023i1.Validation.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +16,7 @@ import java.sql.Date;
 public class EmployeeDTO {
     private String imgUrl;
     @NotBlank(message = "Khonng duoc de trong ten")
+    @Size(max = 50,message = "khong duoc qua 50 ki tu")
     private String fullName;
     @NotBlank(message = "Khonng duoc de trong dia chi")
     private String address;
@@ -25,7 +25,8 @@ public class EmployeeDTO {
     private Date birthday;
 
     @NotBlank(message = "so dien thoai khong duoc de trong ")
-    @Pattern(regexp = "^(03|05|07|08|09)\\d{8}$", message = "So dien thoai khong dung dinh dang ")
+    @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số")
+    @NumberphoneExists
     private String numberphone;
 
     @NotBlank(message = "Khong duoc de trong")
@@ -42,6 +43,7 @@ public class EmployeeDTO {
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             message = "Email không hợp lệ")
     @Size(max = 50,message = "khong duoc qua 50 ki tu")
+    @EmailExists
     private String email;
     private Boolean gender;
     @SalaryMultiple

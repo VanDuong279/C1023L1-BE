@@ -1,7 +1,6 @@
 package com.example.projectc1023i1.Dto;
 
-import com.example.projectc1023i1.Validation.SalaryMultiple;
-import com.example.projectc1023i1.Validation.UniqueUsernameUpdate;
+import com.example.projectc1023i1.Validation.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +18,7 @@ public class EmployeeUpdateDTO {
     private String imgUrl;
 
     @NotBlank(message = "Không được để trống tên")
+    @Size(max = 50,message = "khong duoc qua 50 ki tu")
     private String fullName;
 
     @NotBlank(message = "Không được để trống địa chỉ")
@@ -28,7 +28,8 @@ public class EmployeeUpdateDTO {
     private Date birthday;
 
     @NotBlank(message = "Số điện thoại không được để trống")
-    @Pattern(regexp = "^(03|05|07|08|09)\\d{8}$", message = "Số điện thoại không đúng định dạng")
+    @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số")
+//    @NumberphoneExists
     private String numberphone;
 
     @NotBlank(message = "Tên đăng nhập không được để trống")
@@ -44,7 +45,9 @@ public class EmployeeUpdateDTO {
     @NotBlank(message = "Email không được để trống")
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Email không hợp lệ")
     @Size(max = 50, message = "Không được quá 50 ký tự")
+    // Thay đổi để truyền email hiện tại
     private String email;
+
 
     private Boolean gender;
 

@@ -8,6 +8,7 @@ import com.example.projectc1023i1.service.user.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +37,28 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Users> users = userService.findAll(pageable);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+
+        // Lấy dữ liệu có phân trang từ database
+        Page<Users> usersPage = userService.findAll(PageRequest.of(0, Integer.MAX_VALUE));
+
+        // Lọc danh sách người dùng có lương lớn hơn 0 và sắp xếp theo role
+        List<Users> filteredUsers = usersPage.getContent().stream()
+                .filter(user -> user.getSalary() != null && user.getSalary() > 0)
+                .sorted(Comparator.comparing(user -> user.getRole().getRoleName().equals("ROLE_USER") ? 0 : 1))
+                .collect(Collectors.toList());
+
+        // Thực hiện phân trang thủ công trên danh sách đã lọc
+        int start = Math.min((int)page * size, filteredUsers.size());
+        int end = Math.min(start + size, filteredUsers.size());
+        List<Users> paginatedUsers = filteredUsers.subList(start, end);
+
+        // Tạo đối tượng Page cho danh sách đã phân trang thủ công
+        Page<Users> filteredPage = new PageImpl<>(paginatedUsers, pageable, filteredUsers.size());
+
+        return new ResponseEntity<>(filteredPage, HttpStatus.OK);
     }
+
+
     /**
      * lấy thông tin dựa trên id
      */
@@ -107,12 +128,15 @@ public class UserController {
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) String fullName,
             @RequestParam(required = false) String numberPhone,
+            @RequestParam(required = false) Integer minSalary,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<Users> users = userService.searchUsers(userName, fullName, numberPhone, pageable);
+        Page<Users> users = userService.searchUsers(userName, fullName, minSalary,numberPhone, pageable);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
 
 
 

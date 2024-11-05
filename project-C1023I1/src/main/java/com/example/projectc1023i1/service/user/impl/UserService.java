@@ -262,7 +262,23 @@ public class UserService implements IUserService {
         Users users = userRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("User với id này không tồn tại"));
 
+        // Lấy người dùng hiện tại từ cơ sở dữ liệu
+        Users user = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại"));
 
+        // Kiểm tra nếu email đã thay đổi
+        if (!user.getEmail().equals(employeeUpdateDTO.getEmail())) {
+            // Nếu email mới khác email hiện tại, kiểm tra xem email có tồn tại không
+            if (userRepo.existsByNumberphone(employeeUpdateDTO.getEmail())) {
+                throw new RuntimeException("Email này đã tồn tại");
+            }
+        }
+        if (!user.getNumberphone().equals(employeeUpdateDTO.getNumberphone())) {
+            // Nếu email mới khác email hiện tại, kiểm tra xem email có tồn tại không
+            if (userRepo.existsByNumberphone(employeeUpdateDTO.getNumberphone())) {
+                throw new RuntimeException("số điện thoại này đã tồn tại");
+            }
+        }
         // Gán các thuộc tính từ EmployeeDTO sang Users
         users.setFullName(employeeUpdateDTO.getFullName() != null ? employeeUpdateDTO.getFullName() : "");
         users.setAddress(employeeUpdateDTO.getAddress() != null ? employeeUpdateDTO.getAddress() : "");
@@ -310,8 +326,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Page<Users> searchUsers(String useName, String fullName, String numberPhone, Pageable pageable) {
-        return userRepo.searchUsers(useName, fullName, numberPhone, pageable);
+    public Page<Users> searchUsers(String useName, String fullName,Integer minSalary ,String numberPhone, Pageable pageable) {
+        return userRepo.searchUsers(useName, fullName, numberPhone,minSalary ,pageable);
     }
 
     @Override

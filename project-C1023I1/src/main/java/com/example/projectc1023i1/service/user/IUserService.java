@@ -28,7 +28,7 @@ public interface IUserService {
     Users save(EmployeeDTO employeeDTO); // Phương thức duy nhất để thêm mới
     Users update(EmployeeUpdateDTO employeeUpdateDTO, Integer id);
     void delete(Integer id);
-    Page<Users> searchUsers(String useName, String fullName, String numberPhone, Pageable pageable);
+    Page<Users> searchUsers(String useName, String fullName,Integer minSalary, String numberPhone, Pageable pageable);
 
     // duong
     public List<Users> getAllUsers();

@@ -40,16 +40,17 @@ public interface IUserRepository extends JpaRepository<Users, Integer> {
 
 
 
-
     @Query("SELECT u FROM Users u WHERE " +
             "(:userName IS NULL OR LOWER(u.username) LIKE LOWER(CONCAT('%', :userName, '%'))) AND " +
             "(:fullName IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :fullName, '%'))) AND " +
-            "(:numberPhone IS NULL OR u.numberphone LIKE CONCAT('%', :numberPhone, '%'))")
+            "(:numberPhone IS NULL OR u.numberphone LIKE CONCAT('%', :numberPhone, '%')) AND " +
+            "(COALESCE(:minSalary, 0) <= u.salary) AND u.salary > 0 " +
+            "ORDER BY CASE WHEN u.role.roleName = 'ROLE_USER' THEN 1 ELSE 2 END, u.role.roleName")
     Page<Users> searchUsers(
             @Param("userName") String userName,
             @Param("fullName") String fullName,
             @Param("numberPhone") String numberPhone,
+            @Param("minSalary") Integer minSalary,
             Pageable pageable);
-
 
 }
