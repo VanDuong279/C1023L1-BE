@@ -1,5 +1,6 @@
 package com.example.projectc1023i1.controller;
 
+import com.example.projectc1023i1.Dto.ChangePassword;
 import com.example.projectc1023i1.Dto.SendCodeDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.Dto.UserLoginDTO;
@@ -19,6 +20,8 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -39,6 +43,8 @@ public class LoginController {
 
     @Autowired
     private ISendCodeService sendCodeService;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
 
     /**
@@ -73,36 +79,13 @@ public class LoginController {
             return ResponseEntity.ok().body(LoginRespone.builder()
                     .token(token)
                     .message("Ban da dang nhap thanh cong")
-                    .userDTO(userService.ConverDTO(users))
                     .build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    /**
-     * dùng để thay đổi password
-     * @param username tên tài khoản của người dùng
-     * @param passwordChange mật khẩu thay đổi
-     * @return Ok (200) nếu thay đổi mật khẩu thành công
-     */
-    @PostMapping("/user/change-password")
-    public ResponseEntity<?> changePassword(
-            @RequestParam("username") String username,
-            @RequestParam("passwordChange") String passwordChange
-    ) {
-        Users users = userService.findByUsername(username).get();
-        if (users ==null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Khong tim thay nguoi dung");
-        }
-        users.setPassword(passwordChange);
-        String token = userService.updatePassword(users);
-        return ResponseEntity.ok(UserRespone.builder()
-                .message("da cap nhat mat khau thanh cong")
-                .userDTO(userService.ConverDTO(users))
-                .token(token)
-                .build());
-    }
+
 
 
     /**
@@ -281,4 +264,49 @@ public class LoginController {
         userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.OK).body("da hoan thanh");
     }
+
+
+    @GetMapping("/getUser")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal Users users) {
+        if (users != null) {
+            // Truy cập thông tin người dùng qua userDetails
+            return ResponseEntity.ok(userService.converUser(users));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+    }
+
+    @PostMapping("/verify/change-password")
+    public ResponseEntity<?> changPassword (
+            @AuthenticationPrincipal Users users,
+            @Valid @RequestBody ChangePassword changePassword,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // Trả về danh sách các thông báo lỗi gọn gàng
+            List<String> errorMessages = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> fieldError.getDefaultMessage()) // Lấy thông báo lỗi từ mỗi fieldError
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        if (users != null && !changePassword.getNewPassword().equals(changePassword.getOldPassword())) {
+            if (passwordEncoder.matches(changePassword.getOldPassword(), users.getPassword())) {
+                String newPassword = passwordEncoder.encode(changePassword.getNewPassword());
+                users.setPassword(newPassword);
+                userService.changePassword(users);
+                return ResponseEntity.status(HttpStatus.OK).body("da hoan thanh");
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("errorOldPassword",true));
+        }else  {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("mật khẩu cũ và mật khẩu mới trùng nhau.");
+        }
+    }
+
+    @GetMapping("/upload-image-user")
+    public ResponseEntity<?> uploadImageUser (@AuthenticationPrincipal Users users,@RequestParam String imgUrl) {
+        if (users != null && !imgUrl.equals("")) {
+            userService.updateUsersByImgUrlAndUserId(imgUrl,users.getUserId());
+            return ResponseEntity.status(HttpStatus.OK).body("da hoan thanh");
+        }
+        return ResponseEntity.badRequest().body("bạn chưa đăng nhập hoặc bạn chưa tải ảnh vào");
+    }
+
 }
