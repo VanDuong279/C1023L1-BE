@@ -10,7 +10,12 @@ import com.example.projectc1023i1.Dto.product.CallServiceRequestDto;
 import com.example.projectc1023i1.Dto.product.OrderDetailsDto;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.model.product.*;
+
+//import com.example.projectc1023i1.config.NotificationWebSocketHandler;
+import com.example.projectc1023i1.repository.product.OrderRepository;
+
 import com.example.projectc1023i1.repository.product.NotificationRepository;
+
 import com.example.projectc1023i1.service.product.CallOrderRequestService;
 import com.example.projectc1023i1.service.product.OrderDetailsService;
 import com.example.projectc1023i1.service.product.TableService;
@@ -36,7 +41,8 @@ import java.util.List;
 @RequestMapping("/api/orders")
 @CrossOrigin(origins = "*")
 public class OrderDetailsController {
-
+    @Autowired
+    private OrderRepository orderRepository;
     @Autowired
     private OrderDetailsService orderDetailsService;
     @Autowired
@@ -225,50 +231,84 @@ public class OrderDetailsController {
 
 
 
-    @GetMapping("/income/today")
-    public ResponseEntity<IncomeDTO> getTodayIncome() {
-        IncomeDTO income = incomeService.getTodayIncome();
+//    @GetMapping("/income/today")
+//    public ResponseEntity<IncomeDTO> getTodayIncome() {
+//        IncomeDTO income = incomeService.getTodayIncome();
+//
+//        if (income == null ) {
+//            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập hôm nay
+//        }
+//
+//        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+//    }
+//
+//    @GetMapping("/income/week")
+//    public ResponseEntity<IncomeDTO> getThisWeekIncome() {
+//        IncomeDTO income = incomeService.getThisWeekIncome();
+//
+//        if (income == null ) {
+//            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tuần này
+//        }
+//
+//        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+//    }
+//
+//    @GetMapping("/income/month")
+//    public ResponseEntity<IncomeDTO> getThisMonthIncome() {
+//        IncomeDTO income = incomeService.getThisMonthIncome();
+//
+//        if (income == null ) {
+//            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tháng này
+//        }
+//
+//        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+//    }
+//
+//    @GetMapping("/income/year")
+//    public ResponseEntity<IncomeDTO> getThisYearIncome() {
+//        IncomeDTO income = incomeService.getThisYearIncome();
+//
+//        if (income == null ) {
+//            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập năm này
+//        }
+//
+//        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+//    }
+//
+//    @GetMapping("/income/custom")
+//    public ResponseEntity<IncomeDTO> getIncomeByDateRange(
+//            @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime from,
+//            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime to) {
+//
+//        IncomeDTO income = incomeService.getIncomeByDateRange(from, to);
+//
+//        if (income == null ) {
+//            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập trong khoảng ngày
+//        }
+//
+//        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+//    }
+@GetMapping("/today-by-hour")
+public List<IncomeDTO> getIncomeByHourToday() {
+    return incomeService.getIncomeByHourToday();
+}
 
-        if (income == null ) {
-            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập hôm nay
-        }
-
-        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    @GetMapping("/this-month-by-day")
+    public List<IncomeDTO> getIncomeByDayInMonth() {
+        return incomeService.getIncomeByDayInMonth();
     }
 
-    @GetMapping("/income/week")
-    public ResponseEntity<IncomeDTO> getThisWeekIncome() {
-        IncomeDTO income = incomeService.getThisWeekIncome();
-
-        if (income == null ) {
-            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tuần này
-        }
-
-        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    @GetMapping("/this-week-by-day")
+    public List<IncomeDTO> getIncomeByDayInWeek() {
+        return incomeService.getIncomeByDayInWeek();
     }
 
-    @GetMapping("/income/month")
-    public ResponseEntity<IncomeDTO> getThisMonthIncome() {
-            IncomeDTO income = incomeService.getThisMonthIncome();
 
-            if (income == null) {
-                return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập tháng này
-            }
-
-            return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
-        }
-    @GetMapping("/income/year")
-    public ResponseEntity<IncomeDTO> getThisYearIncome() {
-        IncomeDTO income = incomeService.getThisYearIncome();
-
-        if (income == null ) {
-            return ResponseEntity.noContent().build(); // Trả về 204 No Content nếu không có thu nhập năm này
-        }
-
-        return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
+    @GetMapping("/this-year-by-month")
+    public List<IncomeDTO> getIncomeByMonthInYear() {
+        return incomeService.getIncomeByMonthInYear();
     }
-
-    @GetMapping("/income/custom")
+    @GetMapping("/by-date-range")
     public ResponseEntity<IncomeDTO> getIncomeByDateRange(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime to) {
