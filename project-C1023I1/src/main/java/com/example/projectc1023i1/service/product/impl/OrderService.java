@@ -22,40 +22,52 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
+    private OrderDetailsRepository orderDetailsRepository;
+
+    @Autowired
     private IUserRepository userRepository;
 
     @Autowired
     private TableRepository tableRepository;
 
-    @Autowired
-    private OrderDetailsRepository orderDetailsRepository;
-
     public List<OrderDTO> getAllOrders() {
-        List<Order> orders = orderRepository.findAll(); // Lấy tất cả các đơn hàng từ OrderRepository
-        return orders.stream()
-                .map(this::convertToDTO) // Chuyển đổi từng đơn hàng sang OrderDTO
+        // Lấy tất cả OrderDetails từ repository
+        List<OrderDetails> allOrderDetails = orderDetailsRepository.findAll();
+
+        // Gom nhóm OrderDetails theo Order và tạo danh sách OrderDTO
+        return allOrderDetails.stream()
+                .collect(Collectors.groupingBy(OrderDetails::getOrder)) // Nhóm theo Order
+                .entrySet().stream()
+                .map(entry -> convertToDTO(entry.getKey(), entry.getValue())) // Chuyển đổi mỗi nhóm sang OrderDTO
                 .collect(Collectors.toList());
     }
 
     public OrderDTO getOrderById(Integer id) {
-        return orderRepository.findById(id)
-                .map(this::convertToDTO) // Chuyển đổi sang OrderDTO
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-    }
+        // Lấy danh sách OrderDetails của Order có id yêu cầu
+        List<OrderDetails> orderDetails = orderDetailsRepository.findByOrderId(id);
 
+        if (orderDetails.isEmpty()) {
+            throw new RuntimeException("Order not found");
+        }
+
+        // Lấy Order từ OrderDetails đầu tiên (do các OrderDetails cùng thuộc về một Order)
+        Order order = orderDetails.get(0).getOrder();
+
+        return convertToDTO(order, orderDetails); // Chuyển đổi sang OrderDTO
+    }
     public List<OrderDTO> getOrdersByDate(LocalDateTime dateCreate) {
-        List<Order> orders = orderRepository.findByDayCreate(dateCreate);
+        List<OrderDetails> orders = orderRepository.findByDayCreate(dateCreate);
         return orders.stream()
-                .map(this::convertToDTO) // Chuyển đổi sang OrderDTO
+                .collect(Collectors.groupingBy(OrderDetails::getOrder))
+                .entrySet().stream()
+                .map(entry -> convertToDTO(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 
-    private OrderDTO convertToDTO(Order order) {
+    private OrderDTO convertToDTO(Order order, List<OrderDetails> orderDetails) {
         OrderDTO dto = new OrderDTO();
 
-        // Tính tổng moneyOrder và quantity từ OrderDetails
-        List<OrderDetails> orderDetails = orderDetailsRepository.findByOrder(order);
-
+        // Tính tổng tiền và số lượng từ danh sách OrderDetails
         double totalMoneyOrder = orderDetails.stream()
                 .mapToDouble(OrderDetails::getTotalMoneyOrder)
                 .sum();
@@ -66,17 +78,20 @@ public class OrderService {
 
         dto.setOrderId(order.getOrderId());
         dto.setTableName(order.getTable().getCode());
-        dto.setDayCreate(order.getDayCreate());
+        dto.setDayCreate(orderDetails.get(0).getDayCreate()); // Sử dụng dayCreate từ OrderDetails
         dto.setTotalMoneyOrder(totalMoneyOrder); // Tổng tiền từ OrderDetails
         dto.setCreatorName(order.getUser().getFullName());
         dto.setQuantily(totalQuantity); // Tổng số lượng từ OrderDetails
 
         // Thêm thông tin chi tiết sản phẩm
-        List<String> productNames = orderDetails.stream()
-                .map(detail -> detail.getProduct().getProductName()+ " x " +detail.getProduct().getProductPrice()+ " x " + detail.getQuantity()+" x " + detail.getQuantity()*detail.getProduct().getProductPrice())
+        List<String> productDetails = orderDetails.stream()
+                .map(detail -> detail.getProduct().getProductName() + " x " +
+                        detail.getProduct().getProductPrice() + " x " +
+                        detail.getQuantity() + " = " +
+                        (detail.getQuantity() * detail.getProduct().getProductPrice()))
                 .collect(Collectors.toList());
 
-        dto.setProductDetails(productNames); // Giả sử bạn có trường productDetails trong OrderDTO
+        dto.setProductDetails(productDetails); // Giả sử bạn có trường productDetails trong OrderDTO
 
         return dto;
     }

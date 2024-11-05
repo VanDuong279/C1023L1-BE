@@ -87,6 +87,9 @@ public class WebSercurityConfig {
                             .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(ADMIN,Roles.USER)
 
                             .requestMatchers(POST,"/api/category/**").hasRole(Roles.USER)
+                            .requestMatchers(POST,"/api/verify/**").hasRole(Roles.USER)
+
+                            .requestMatchers(GET,"/api/upload-image-user").hasRole(Roles.USER)
 
                             .requestMatchers(GET,"/api/table/**").hasAnyRole(ADMIN)
                             .requestMatchers(PUT,"/api/table/**").hasAnyRole(ADMIN)

@@ -12,9 +12,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface OrderRepository extends JpaRepository<Order,Integer> {
+public interface OrderRepository extends JpaRepository<OrderDetails,Integer> {
 //    List<Order> findByOrderId(Integer id);
-    List<Order> findByDayCreate(LocalDateTime dayCreate);
+    List<OrderDetails> findByDayCreate(LocalDateTime dayCreate);
 
     @Query("SELECT SUM(od.totalMoneyOrder) FROM OrderDetails od WHERE od.dayCreate BETWEEN :from AND :to")
     Double sumTotalByDate(LocalDateTime from, LocalDateTime to);
