@@ -9,9 +9,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Integer> {
+    List<OrderDetails> findByTableId(int tableId);
+    List<OrderDetails> findByOrder(Order order);
         @Query(value = "SELECT * FROM order_details WHERE table_id = :tableId", nativeQuery = true)
         List<OrderDetails> findOrderDetailsByTableId(@Param("tableId") int tableId);
 
-        List<OrderDetails> findByOrder(Order order);
+
 }
 

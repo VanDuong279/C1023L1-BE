@@ -49,10 +49,10 @@ public class WebSercurityConfig {
                 .csrf(AbstractHttpConfigurer:: disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((request)   -> {
-                    request.requestMatchers(
-                                    "**")
 
-                            .permitAll()
+                        request.requestMatchers(
+                                        "**")
+                                .permitAll()
                             // phaan quyen cho user
                             .requestMatchers(POST,"/api/users/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/users/**").hasAnyRole(Roles.ADMIN)
@@ -91,6 +91,10 @@ public class WebSercurityConfig {
 
                             .requestMatchers(GET,"/api/upload-image-user").hasRole(Roles.USER)
 
+                            .requestMatchers(GET,"/api/table/**").hasAnyRole(ADMIN)
+                            .requestMatchers(PUT,"/api/table/**").hasAnyRole(ADMIN)
+                            .requestMatchers(DELETE,"/api/table/**").hasAnyRole(ADMIN)
+                            .requestMatchers(POST,"/api/table/**").hasAnyRole(ADMIN)
                             // phan quyen cho feedback
 
                             .anyRequest().authenticated()
