@@ -16,10 +16,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @jakarta.persistence.Table(name = "order_details")
 public class OrderDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer order_details_Id;
+    private Integer orderDetailsId;
 
     @Column(nullable = false)
     private LocalDateTime dayCreate;
@@ -53,20 +52,16 @@ public class OrderDetails {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;
+
     @Getter
     @ManyToOne
     @JoinColumn(name = "order_id") // tên cột trong bảng
     private Order order;
-    public LocalDateTime getCallOrderTime() {
-        return callOrderTime;
-    }
 
-    public void setCallOrderTime(LocalDateTime callOrderTime) {
-        this.callOrderTime = callOrderTime;
-    }
 
 
     public OrderDetails() {

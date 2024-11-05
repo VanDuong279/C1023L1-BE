@@ -23,6 +23,7 @@ public interface IUserRepository extends JpaRepository<Users, Integer> {
     Optional<Users> findByUsername(@Param("username") String username);
     Optional<Users> findByNumberphone(String numberphone);
     Optional<Users> findByEmail(String email);
+
     @Modifying
     @Transactional
     @Query(value = "insert into users (full_name, address, numberphone, email, user_name, `password`, birthday, is_active, role_id) " +
@@ -52,5 +53,12 @@ public interface IUserRepository extends JpaRepository<Users, Integer> {
             @Param("numberPhone") String numberPhone,
             @Param("minSalary") Integer minSalary,
             Pageable pageable);
+
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Users u SET u.imgUrl = :param WHERE u.userId = :userId")
+    void updateUsersByImgUrlAndUserId(@Param("param") String param, @Param("userId") Integer userId);
+
 
 }
