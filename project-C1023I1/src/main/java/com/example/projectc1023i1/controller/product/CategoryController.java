@@ -1,6 +1,7 @@
 package com.example.projectc1023i1.controller.product;
 import com.example.projectc1023i1.Dto.product.CategoryDto;
 import com.example.projectc1023i1.model.product.Category;
+import com.example.projectc1023i1.model.product.Product;
 import com.example.projectc1023i1.service.product.ICategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +20,14 @@ import java.util.stream.Collectors;
 public class CategoryController {
     @Autowired
    private ICategoryService categoryService;
+    /**
+     * Kiểm tra tên loại sa phẩm có tồn tại hay không
+     */
+    @GetMapping("/checkCategoryName")
+    public ResponseEntity<Boolean> checkProductName(@RequestParam String categoryName) {
+        boolean exists = categoryService.existByCategoryName(categoryName);
+        return ResponseEntity.ok(exists);
+    }
 
     /**
      * Hiển thị tất category
@@ -33,6 +42,17 @@ public class CategoryController {
         return new ResponseEntity<>(categoryList, HttpStatus.OK);
     }
     /**
+     * Hiển thị chi tiết Category
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getCategoryById(@PathVariable int id){
+        Category category = categoryService.findCategoryById(id);
+        if (category == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+    /** e
      * Thêm mới category
      */
     @PostMapping("")

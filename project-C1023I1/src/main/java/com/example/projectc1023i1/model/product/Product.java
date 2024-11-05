@@ -1,7 +1,9 @@
 package com.example.projectc1023i1.model.product;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
 @Table(name = "product")
 public class Product {
     @Id
@@ -53,8 +56,8 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore // Ngăn chặn serialization vòng lặp
-    @JsonManagedReference
+//    @JsonIgnore // Ngăn chặn serialization vòng lặp
+//    @JsonManagedReference
     private Category category;
 
 }

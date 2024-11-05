@@ -49,7 +49,7 @@ public class WebSercurityConfig {
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request   -> {
                     request.requestMatchers(
-                                    "**")
+                                     "**")
 
                             .permitAll()
                             .requestMatchers(POST,"/api/product/product/**").hasAnyRole(Roles.ADMIN,Roles.USER)
@@ -63,12 +63,15 @@ public class WebSercurityConfig {
                             .requestMatchers(POST,"api/category/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(DELETE,"/api/product/**").hasAnyRole(Roles.ADMIN)
                             .requestMatchers(PATCH,"/api/product/**").hasAnyRole(Roles.ADMIN)
+                            .requestMatchers(GET,"/api/product/checkProductName").hasAnyRole(Roles.ADMIN)
+
 
                             .requestMatchers(POST,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(DELETE,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(GET,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(PUT,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
                             .requestMatchers(PATCH,"/api/orders/**").hasAnyRole(Roles.ADMIN,Roles.USER)
+                            .requestMatchers(GET,"/api/feedbacks/**").hasAnyRole(Roles.ADMIN, Roles.USER)
 
                             .anyRequest().authenticated()
                     ;
@@ -82,11 +85,10 @@ public class WebSercurityConfig {
             @Override
             public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("*")); // cho phép tất cả domain gửi yêu cầu
-                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                // cho phép cái http nhất định đi qua
-                configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-                configuration.setExposedHeaders(List.of("x-auth-token")); // liệt kê các header mà front end có thể truycaapjpj từ phản hồi
+                configuration.setAllowedOrigins(List.of("*")); // Cho phép tất cả các domain gửi yêu cầu
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // Cho phép các phương thức HTTP nhất định
+                configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token")); // Thêm "token" vào danh sách các header được phép
+                configuration.setExposedHeaders(List.of("x-auth-token")); // Liệt kê các header mà frontend có thể truy cập từ phản hồi
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                 // tạo 1 nguồn cấu hình CORS dựa trên URl
                 source.registerCorsConfiguration("/**", configuration);// dùng đ cấu hình CORS cho tất cả đường dẫn
