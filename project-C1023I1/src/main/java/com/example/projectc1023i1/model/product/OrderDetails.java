@@ -1,17 +1,24 @@
 package com.example.projectc1023i1.model.product;
 
 import com.example.projectc1023i1.model.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
+@Setter
+@Getter
+@AllArgsConstructor
 @jakarta.persistence.Table(name = "order_details")
 public class OrderDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId;
+    private Integer orderDetailId;
 
     @Column(nullable = false)
     private LocalDateTime dayCreate;
@@ -30,107 +37,34 @@ public class OrderDetails {
     @Column(nullable = false)
     private String status; // Trạng thái đơn hàng
 
+    @ManyToOne
+    @JoinColumn(name = "call_order_request_id")
+    private CallOrderRequest callOrderRequest;
     @Column(nullable = false)
-    private LocalDateTime callOrderTime; // Thời gian gọi món
-
+    private LocalDateTime callOrderTime;
     @Column(nullable = false)
     private LocalDateTime callServiceTime; // Thời gian gọi phục vụ
 
     @ManyToOne
     @JoinColumn(name = "table_id")
     private Table table;
+    @Getter
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;
 
-    // Getters và Setters cho tất cả các thuộc tính
+    @Getter
+    @ManyToOne
+    @JoinColumn(name = "order_id") // tên cột trong bảng
+    private Order order;
 
-    public int getOrderId() {
-        return orderId;
+
+
+    public OrderDetails() {
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public LocalDateTime getDayCreate() {
-        return dayCreate;
-    }
-
-    public void setDayCreate(LocalDateTime dayCreate) {
-        this.dayCreate = dayCreate;
-    }
-
-    public LocalDateTime getDayUpdate() {
-        return dayUpdate;
-    }
-
-    public void setDayUpdate(LocalDateTime dayUpdate) {
-        this.dayUpdate = dayUpdate;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public LocalDateTime getShippingDay() {
-        return shippingDay;
-    }
-
-    public void setShippingDay(LocalDateTime shippingDay) {
-        this.shippingDay = shippingDay;
-    }
-
-    public double getTotalMoneyOrder() {
-        return totalMoneyOrder;
-    }
-
-    public void setTotalMoneyOrder(double totalMoneyOrder) {
-        this.totalMoneyOrder = totalMoneyOrder;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getCallOrderTime() {
-        return callOrderTime;
-    }
-
-    public void setCallOrderTime(LocalDateTime callOrderTime) {
-        this.callOrderTime = callOrderTime;
-    }
-
-    public LocalDateTime getCallServiceTime() {
-        return callServiceTime;
-    }
-
-    public void setCallServiceTime(LocalDateTime callServiceTime) {
-        this.callServiceTime = callServiceTime;
-    }
-
-    public Table getTable() {
-        return table;
-    }
-
-    public void setTable(Table table) {
-        this.table = table;
-    }
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
 }

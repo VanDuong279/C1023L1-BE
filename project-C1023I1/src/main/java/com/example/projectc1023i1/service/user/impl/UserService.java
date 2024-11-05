@@ -1,11 +1,14 @@
 package com.example.projectc1023i1.service.user.impl;
 
+import com.example.projectc1023i1.Dto.EmployeeDTO;
+import com.example.projectc1023i1.Dto.EmployeeUpdateDTO;
 import com.example.projectc1023i1.Dto.UserDTO;
 import com.example.projectc1023i1.component.JwtTokenUtils;
 import com.example.projectc1023i1.model.Roles;
 import com.example.projectc1023i1.model.Users;
 import com.example.projectc1023i1.repository.IRoleRepo;
 import com.example.projectc1023i1.repository.IUserRepository;
+import com.example.projectc1023i1.respone.UserInforRespone;
 import com.example.projectc1023i1.service.user.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -49,9 +52,6 @@ public class UserService implements IUserService {
     @Override
     public void createUser(UserDTO userDTO) {
         Users users = new Users();
-
-
-
         users.setFullName(userDTO.getFullName() != null ? userDTO.getFullName() : "");
         users.setAddress(userDTO.getAddress() != null ? userDTO.getAddress() : "");
         users.setEmail(userDTO.getEmail());
@@ -113,7 +113,7 @@ public class UserService implements IUserService {
      * @return tra ve true neu tai khoan nay ton tai, nguoc lai la false
      */
     @Override
-    public boolean checkNumberphone(String phoneNumber) {
+    public boolean exitsNumberphone(String phoneNumber) {
         if (userRepo.existsByNumberphone(phoneNumber)) {
             return true;
         }
@@ -177,7 +177,7 @@ public class UserService implements IUserService {
      * @return true neu ton tai false  neu khong ton tai
      */
     @Override
-    public boolean checkUsername(String username) {
+    public boolean exitsUsername(String username) {
         if (userRepo.existsByUsername(username)) {
             return true;
         }
@@ -195,14 +195,29 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserInforRespone converUser(Users users) {
+        return modelMapper.map(users,UserInforRespone.class);
+    }
+
+    @Override
     public Users findByPhone(String phone) {
         return userRepo.findByNumberphone(phone).get();
     }
 
+    // day la phan thay doi password
+    @Override
+    public void changePassword(Users Users) {
+        userRepo.save(Users);
+    }
+
+    @Override
+    public void updateUsersByImgUrlAndUserId(String imgUrlA, Integer userId) {
+        userRepo.updateUsersByImgUrlAndUserId(imgUrlA, userId);
+    }
+
     @Override
     public Page<Users> findAll(Pageable pageable) {
-//        return  userRepo.findAll(pageable);;
-        return null;
+        return  userRepo.findAll(pageable);
     }
 
     @Override
@@ -211,27 +226,100 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Users save(UserDTO userDTO, Integer id) {
-        Users user;
-        if (id == null) {
-            user = new Users(); // Thêm mới
-//            user.setCreatedAt(new java.util.Date());   // cai nay khong can thiet
-        } else {
-            user = userRepo.findById(id).orElse(null); // Cập nhật
-            if (user != null) {
-//                user.setUpdatedAt(new java.util.Date()); // cai nay khong can thiet
+    public Users save(EmployeeDTO employeeDTO) {
+        System.out.println("Dữ liệu nhận được từ frontend: " + employeeDTO);
+
+        Users users=new Users();
+
+
+
+        // Gán các thuộc tính từ EmployeeDTO sang Users
+        users.setFullName(employeeDTO.getFullName() != null ? employeeDTO.getFullName() : "");
+        users.setAddress(employeeDTO.getAddress() != null ? employeeDTO.getAddress() : "");
+        users.setEmail(employeeDTO.getEmail());
+        users.setNumberphone(employeeDTO.getNumberphone());
+        users.setUsername(employeeDTO.getUsername());
+        users.setIsActive(employeeDTO.getIsActive() != null ? employeeDTO.getIsActive() : true);
+        users.setGender(employeeDTO.getGender());
+
+        if (employeeDTO.getBirthday() != null) {
+            users.setBirthday(employeeDTO.getBirthday());
+        }
+        // Set imgUrl (lưu ảnh)
+        users.setImgUrl(employeeDTO.getImgUrl());
+
+        users.setSalary(employeeDTO.getSalary() != null ? employeeDTO.getSalary() : 0.0);
+
+        // Nếu roleId không được cung cấp, đặt mặc định là "ROLE_USER"
+        Roles roles = null;
+        if (employeeDTO.getRoleId() == null) {
+            roles = roleRepo.findByRoleName("ROLE_USER");
+            if (roles == null) {
+                throw new RuntimeException("Role mặc định 'ROLE_USER' không tồn tại");
             }
+        } else {
+            roles = roleRepo.findById(employeeDTO.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Role không tồn tại."));
         }
 
-        if (user != null) {
-            BeanUtils.copyProperties(userDTO, user, "userId", "creatAt");
-            Roles role = roleRepo.findById(userDTO.getRoleId()).orElse(null);
-            user.setRole(role);
-            return userRepo.save(user);
+        users.setRole(roles);
+
+        // Mã hóa mật khẩu nếu có password
+        if (employeeDTO.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(employeeDTO.getPassword());
+            users.setPassword(encodedPassword);
         }
 
-        return null;
+        // Lưu user và trả về đối tượng đã lưu
+        return userRepo.save(users);
     }
+
+    @Override
+    public Users update(EmployeeUpdateDTO employeeUpdateDTO, Integer id) {
+        Users users = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User với id này không tồn tại"));
+
+
+        // Gán các thuộc tính từ EmployeeDTO sang Users
+        users.setFullName(employeeUpdateDTO.getFullName() != null ? employeeUpdateDTO.getFullName() : "");
+        users.setAddress(employeeUpdateDTO.getAddress() != null ? employeeUpdateDTO.getAddress() : "");
+        users.setEmail(employeeUpdateDTO.getEmail());
+        users.setNumberphone(employeeUpdateDTO.getNumberphone());
+        users.setUsername(employeeUpdateDTO.getUsername());
+        users.setIsActive(employeeUpdateDTO.getIsActive() != null ? employeeUpdateDTO.getIsActive() : true);
+        users.setGender(employeeUpdateDTO.getGender());
+
+        if (employeeUpdateDTO.getBirthday() != null) {
+            users.setBirthday(employeeUpdateDTO.getBirthday());
+        }
+        // Set imgUrl (lưu ảnh)
+        users.setImgUrl(employeeUpdateDTO.getImgUrl());
+
+        users.setSalary(employeeUpdateDTO.getSalary() != null ? employeeUpdateDTO.getSalary() : 0.0);
+
+        // Nếu roleId không được cung cấp, đặt mặc định là "ROLE_USER"
+        Roles roles = null;
+        if (employeeUpdateDTO.getRoleId() == null) {
+            roles = roleRepo.findByRoleName("ROLE_USER");
+            if (roles == null) {
+                throw new RuntimeException("Role mặc định 'ROLE_USER' không tồn tại");
+            }
+        } else {
+            roles = roleRepo.findById(employeeUpdateDTO.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Role không tồn tại."));
+        }
+
+        users.setRole(roles);
+
+        // Mã hóa mật khẩu nếu có password
+        if (employeeUpdateDTO.getPassword() != null) {
+            String encodedPassword = passwordEncoder.encode(employeeUpdateDTO.getPassword());
+            users.setPassword(encodedPassword);
+        }
+
+        // Lưu user và trả về đối tượng đã lưu
+        return userRepo.save(users); }
+
 
     @Override
     public void delete(Integer id) {

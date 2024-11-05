@@ -1,5 +1,8 @@
 package com.example.projectc1023i1.Dto;
 
+import com.example.projectc1023i1.Validation.EmailExists;
+import com.example.projectc1023i1.Validation.NumberphoneExists;
+import com.example.projectc1023i1.Validation.UsernameExists;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -31,25 +34,32 @@ public class UserDTO implements Validator {
 
     @NotBlank(message = "so dien thoai khong duoc de trong ")
     @Pattern(regexp = "^(03|05|07|08|09)\\d{8}$", message = "So dien thoai khong dung dinh dang ")
+    @NumberphoneExists
     private String numberphone;
 
     @NotBlank(message = "Khong duoc de trong")
     @Size(min = 6, message = "Tên đăng nhập phải lớn hơn 6 ký tự")
+    @UsernameExists
     private String username;
 
     @NotBlank(message = "Khong duoc de trong password")
     @Size(min = 8, message = "Mat khau phai co it nhat 8 ky tu")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{4,}$",
+            message = "Mật khẩu phải có ít nhất 1 ký tự thường, 1 ký tự hoa, 1 ký tự số, và 1 ký tự đặc biệt")
     private String password;
 
     @NotBlank(message = "Khong duoc de trong email")
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             message = "Email không hợp lệ")
     @Size(max = 50,message = "khong duoc qua 50 ki tu")
+    @EmailExists
     private String email;
 
     private Double salary;
 
+
     private Boolean isActive;
+    private  Boolean gender;
 
     private Integer roleId;
 

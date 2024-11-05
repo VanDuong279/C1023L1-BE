@@ -99,9 +99,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     org.modelmapper.internal.Pair.of("/api/product","GET"),
                     org.modelmapper.internal.Pair.of("/api/product/{id}","GET"),
                     org.modelmapper.internal.Pair.of("/api/product/searchByProductName","GET"),
-                    org.modelmapper.internal.Pair.of("/api/product/searchByCategory","GET"),
-//                    org.modelmapper.internal.Pair.of("/api/product/checkProductName","GET"),
-                    org.modelmapper.internal.Pair.of("/api/feedbacks","POST")
+                    org.modelmapper.internal.Pair.of("/api/product/searchByCategory","GET")
             );
 
                 for (Pair<String, String > token : bypassTokens) {

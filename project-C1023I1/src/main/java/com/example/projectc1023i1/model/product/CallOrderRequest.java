@@ -1,8 +1,14 @@
 package com.example.projectc1023i1.model.product;
 
+import com.example.projectc1023i1.model.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,35 +19,19 @@ public class CallOrderRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private String orderDetails;
+    @OneToMany(mappedBy = "callOrderRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetails> orderDetailsList = new ArrayList<>();
 
     // Quan hệ một-một với Table
     @OneToOne
-    @JoinColumn(name = "table_id", referencedColumnName = "table_id")  // Khóa ngoại tham chiếu đến table_id
+    @JsonIgnore
+    @JoinColumn(name = "table_id") // Chỉ rõ khóa ngoại
     private Table table;
 
-    public int getId() {
-        return id;
-    }
+    // Quan hệ một-một với User (nếu cần)
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id") // Chỉ rõ khóa ngoại
+    private Users user;
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void setOrderDetails(String orderDetails) {
-        this.orderDetails = orderDetails;
-    }
-
-    public Table getTable() {
-        return table;
-    }
-
-    public void setTable(Table table) {
-        this.table = table;
-    }
 }

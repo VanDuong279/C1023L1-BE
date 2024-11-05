@@ -80,7 +80,7 @@ public class Users implements UserDetails { // ddaay laf class lay ra thong tin 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // cai nay la tao ra danh sach roles
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.getRoleName().toUpperCase()));
+        authorities.add(new SimpleGrantedAuthority( getRole().getRoleName()));
         return authorities; // tra ve role cua nguoi dung
     }
 

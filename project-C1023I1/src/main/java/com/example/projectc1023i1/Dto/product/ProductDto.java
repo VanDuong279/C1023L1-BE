@@ -1,7 +1,6 @@
         package com.example.projectc1023i1.Dto.product;
         import com.example.projectc1023i1.model.product.Category;
         import com.example.projectc1023i1.model.product.Product;
-        import jakarta.validation.constraints.NotBlank;
         import jakarta.validation.constraints.Size;
         import lombok.Getter;
         import lombok.NoArgsConstructor;

@@ -3,6 +3,7 @@ package com.example.projectc1023i1.repository;
 import com.example.projectc1023i1.model.Users;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.Optional;
 
-public interface IUserRepository extends CrudRepository<Users, Integer> {
+public interface IUserRepository extends JpaRepository<Users, Integer> {
     boolean existsByUsername(String username); // hafm kiem tra tai khoan co ton tai hay khong
     boolean existsByEmail(String email);
     boolean existsByNumberphone(String numberphone);
@@ -21,6 +22,8 @@ public interface IUserRepository extends CrudRepository<Users, Integer> {
     @Query(value = "SELECT * FROM users WHERE user_name = :username", nativeQuery = true)
     Optional<Users> findByUsername(@Param("username") String username);
     Optional<Users> findByNumberphone(String numberphone);
+    Optional<Users> findByEmail(String email);
+
     @Modifying
     @Transactional
     @Query(value = "insert into users (full_name, address, numberphone, email, user_name, `password`, birthday, is_active, role_id) " +
@@ -48,6 +51,11 @@ public interface IUserRepository extends CrudRepository<Users, Integer> {
             @Param("fullName") String fullName,
             @Param("numberPhone") String numberPhone,
             Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Users u SET u.imgUrl = :param WHERE u.userId = :userId")
+    void updateUsersByImgUrlAndUserId(@Param("param") String param, @Param("userId") Integer userId);
 
 
 }

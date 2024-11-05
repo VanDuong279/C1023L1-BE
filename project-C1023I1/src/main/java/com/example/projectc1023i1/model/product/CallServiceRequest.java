@@ -18,7 +18,7 @@ public class CallServiceRequest {
 
     // Quan hệ một-một với Table
     @OneToOne
-    @JoinColumn(name = "table_id", referencedColumnName = "table_id")  // Khóa ngoại tham chiếu đến table_id
+    @JoinColumn(name = "table_id") // Chỉ rõ khóa ngoại
     private Table table;
 
     public int getId() {

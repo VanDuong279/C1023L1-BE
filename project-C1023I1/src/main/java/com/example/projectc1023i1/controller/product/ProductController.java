@@ -93,7 +93,7 @@ public class ProductController {
         }
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
-    /**
+    /** 
      * Tìm kiếm theo Category
      */
     @GetMapping("/searchByCategory")
@@ -165,4 +165,11 @@ public class ProductController {
         productService.deleteProduct(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
+
+    @GetMapping("/hello")
+    public  ResponseEntity<?> hello () {
+        return ResponseEntity.ok("hello");
+    }
+
+
 }
