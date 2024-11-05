@@ -2,6 +2,7 @@ package com.example.projectc1023i1.service.product.impl;
 
 import com.example.projectc1023i1.Dto.product.bill.OrderDTO;
 import com.example.projectc1023i1.Dto.product.income.IncomeDTO;
+
 import com.example.projectc1023i1.model.product.Order;
 import com.example.projectc1023i1.model.product.OrderDetails;
 import com.example.projectc1023i1.repository.IUserRepository;
@@ -30,47 +31,53 @@ public class OrderService {
     private OrderDetailsRepository orderDetailsRepository;
 
     public List<OrderDTO> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
+        List<Order> orders = orderRepository.findAll(); // Lấy tất cả các đơn hàng từ OrderRepository
         return orders.stream()
-                .map(order -> convertToDTO(order))
+                .map(this::convertToDTO) // Chuyển đổi từng đơn hàng sang OrderDTO
                 .collect(Collectors.toList());
     }
 
     public OrderDTO getOrderById(Integer id) {
         return orderRepository.findById(id)
-                .map(order -> convertToDTO(order))
+                .map(this::convertToDTO) // Chuyển đổi sang OrderDTO
                 .orElseThrow(() -> new RuntimeException("Order not found"));
     }
 
     public List<OrderDTO> getOrdersByDate(LocalDateTime dateCreate) {
         List<Order> orders = orderRepository.findByDayCreate(dateCreate);
         return orders.stream()
-                .map(order -> convertToDTO(order))
+                .map(this::convertToDTO) // Chuyển đổi sang OrderDTO
                 .collect(Collectors.toList());
     }
 
     private OrderDTO convertToDTO(Order order) {
         OrderDTO dto = new OrderDTO();
+
+        // Tính tổng moneyOrder và quantity từ OrderDetails
+        List<OrderDetails> orderDetails = orderDetailsRepository.findByOrder(order);
+
+        double totalMoneyOrder = orderDetails.stream()
+                .mapToDouble(OrderDetails::getTotalMoneyOrder)
+                .sum();
+
+        int totalQuantity = orderDetails.stream()
+                .mapToInt(OrderDetails::getQuantity)
+                .sum();
+
         dto.setOrderId(order.getOrderId());
-        dto.setDayCreate(order.getDayCreate());
-        dto.setCreatorName(order.getUser().getFullName());
         dto.setTableName(order.getTable().getCode());
-        dto.setTotalMoneyOrder(order.getTotalMoneyOrder());
-        dto.setQuantily(order.getQuantity());
+        dto.setDayCreate(order.getDayCreate());
+        dto.setTotalMoneyOrder(totalMoneyOrder); // Tổng tiền từ OrderDetails
+        dto.setCreatorName(order.getUser().getFullName());
+        dto.setQuantily(totalQuantity); // Tổng số lượng từ OrderDetails
 
-        // Truy vấn OrderDetails từ OrderDetailsRepository
-        List<OrderDetails> orderDetailsList = orderDetailsRepository.findByOrder(order);
+        // Thêm thông tin chi tiết sản phẩm
+        List<String> productNames = orderDetails.stream()
+                .map(detail -> detail.getProduct().getProductName()+ " x " +detail.getProduct().getProductPrice()+ " x " + detail.getQuantity()+" x " + detail.getQuantity()*detail.getProduct().getProductPrice())
+                .collect(Collectors.toList());
 
-        // Nếu có OrderDetails, lấy thông tin đầu tiên để gán
-        if (!orderDetailsList.isEmpty()) {
-            OrderDetails orderDetail = orderDetailsList.get(0);
-            dto.setProductName(orderDetail.getProduct().getProductName());
-            dto.setProductPrice(orderDetail.getProduct().getProductPrice());
-        }
+        dto.setProductDetails(productNames); // Giả sử bạn có trường productDetails trong OrderDTO
 
         return dto;
     }
-
 }
-
-

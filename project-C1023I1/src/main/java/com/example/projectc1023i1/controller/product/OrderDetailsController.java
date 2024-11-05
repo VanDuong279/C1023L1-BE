@@ -97,6 +97,7 @@ public class OrderDetailsController {
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
 
+
     // Thêm một đơn đặt hàng
     @PostMapping("")
     public ResponseEntity<OrderDetails> createOrderDetails(@RequestBody OrderDetailsDto orderDetailsDto) {

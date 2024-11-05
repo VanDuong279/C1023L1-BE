@@ -11,9 +11,16 @@ import java.util.List;
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Integer> {
     List<OrderDetails> findByTableId(int tableId);
     List<OrderDetails> findByOrder(Order order);
-        @Query(value = "SELECT * FROM order_details WHERE table_id = :tableId", nativeQuery = true)
-        List<OrderDetails> findOrderDetailsByTableId(@Param("tableId") int tableId);
+    @Query("SELECT od FROM OrderDetails od WHERE od.order.orderId = :orderId")
+    List<OrderDetails> findByOrderId(@Param("orderId") Integer orderId);
+
+    @Query("SELECT SUM(od.totalMoneyOrder) FROM OrderDetails od WHERE od.order.orderId = :orderId")
+    Double sumTotalMoneyOrderByOrderId(@Param("orderId") Integer orderId);
+
+    @Query("SELECT SUM(od.quantity) FROM OrderDetails od WHERE od.order.orderId = :orderId")
+    Integer sumQuantityByOrderId(@Param("orderId") Integer orderId);
+    @Query(value = "SELECT * FROM order_details WHERE table_id = :tableId", nativeQuery = true)
+    List<OrderDetails> findOrderDetailsByTableId(@Param("tableId") int tableId);
 
 
 }
-
