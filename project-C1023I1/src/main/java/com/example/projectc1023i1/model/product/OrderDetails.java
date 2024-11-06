@@ -53,6 +53,9 @@ public class OrderDetails {
     @JoinColumn(name = "product_id")
     private Product product;
 
+
+
+    @Getter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;

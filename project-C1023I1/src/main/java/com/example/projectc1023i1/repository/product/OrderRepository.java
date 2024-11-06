@@ -46,6 +46,26 @@ public interface OrderRepository extends JpaRepository<OrderDetails,Integer> {
             "GROUP BY MONTH(od.day_create)",
             nativeQuery = true)
     List<Object[]> getIncomeByMonthInYear();
+    @Query(value = """
+    SELECT 
+        CASE 
+            WHEN DATEDIFF(:toDate, :fromDate) = 0 THEN HOUR(od.day_create)
+            WHEN DATEDIFF(:toDate, :fromDate) BETWEEN 2 AND 31 THEN DAY(od.day_create)
+            WHEN DATEDIFF(:toDate, :fromDate) BETWEEN 32 AND 366 THEN MONTH(od.day_create)
+            ELSE YEAR(od.day_create)
+        END AS period,
+        SUM(od.total_money_order) AS totalIncome
+    FROM order_details od
+    WHERE od.day_create BETWEEN :fromDate AND :toDate
+    GROUP BY 
+        CASE 
+            WHEN DATEDIFF(:toDate, :fromDate) = 0 THEN HOUR(od.day_create)
+            WHEN DATEDIFF(:toDate, :fromDate) BETWEEN 2 AND 31 THEN DAY(od.day_create)
+            WHEN DATEDIFF(:toDate, :fromDate) BETWEEN 32 AND 366 THEN MONTH(od.day_create)
+            ELSE YEAR(od.day_create)
+        END
+    """, nativeQuery = true)
+    List<Object[]> getIncomeByRange(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
 
     @Query(value = "SELECT SUM(od.totalMoneyOrder) FROM OrderDetails od WHERE od.dayCreate BETWEEN :from AND :to")
     List<Object[]> getIncomeByDateRange(@Param("from") LocalDateTime from, @Param("to") LocalDateTime to);

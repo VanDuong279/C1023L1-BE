@@ -322,6 +322,15 @@ public List<IncomeDTO> getIncomeByHourToday() {
 
         return ResponseEntity.ok(income); // Trả về 200 OK nếu có dữ liệu
     }
+    @GetMapping("/range")
+    public ResponseEntity<List<IncomeDTO>> getIncomeByRange(
+            @RequestParam("fromDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime fromDate,
+            @RequestParam("toDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime toDate) {
+
+        List<IncomeDTO> incomeData = incomeService.getIncomeByRange(fromDate, toDate);
+
+        return ResponseEntity.ok(incomeData);
+    }
 
     @PostMapping("/hello")
     public ResponseEntity<?> hello() {
