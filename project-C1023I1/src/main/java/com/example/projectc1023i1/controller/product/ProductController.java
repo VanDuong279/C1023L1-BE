@@ -28,12 +28,27 @@ public class ProductController {
     @Autowired
     private ICategoryService categoryService;
     /**
+     * Kiểm tra tên sản phẩm có tồn tại hay không
+     */
+    @GetMapping("/checkProductName")
+    public ResponseEntity<?> checkProductName(@RequestParam String productName) {
+        System.out.println("-----------------------------" + productName);
+        boolean exists = productService.existProductName(productName);
+        System.out.println(exists + "aaaaa");
+        if (exists) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.OK);
+    }
+    /**
      * Hiển thị tất cả Product
      */
     @GetMapping("")
     public ResponseEntity<Page<Product>> getListProduct(@RequestParam(defaultValue = "0")int page,
-                                                        @RequestParam(defaultValue = "10")int size){
-        Sort sort = Sort.by("productName").ascending();
+                                                        @RequestParam(defaultValue = "10")int size,
+                                                        @RequestParam(defaultValue = "productName") String sortBy,
+                                                        @RequestParam(defaultValue = "asc") String sortOrder){
+        Sort sort = sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page,size, sort);
         Page<Product> productPage = productService.findAllProducts(pageable);
         if (productPage.isEmpty()){
@@ -63,7 +78,7 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Product> productPage = productService.searchByName(productName, pageable);
         if (productPage.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(productPage, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
@@ -74,7 +89,7 @@ public class ProductController {
     public ResponseEntity<Object> searchByProductCode(@RequestParam(required = false) String productCode){
         Product product = productService.searchByCode(productCode);
         if (product == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(product, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
@@ -90,7 +105,7 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Sort sort = Sort.by(category.getCategoryName()).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productService.searchByCategory(category, pageable);
         if (productPage.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -111,6 +126,7 @@ public class ProductController {
                     .collect(Collectors.toList());
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        productDto.setProductCode(productService.generateNextProductCode());
         Product product = new Product();
         BeanUtils.copyProperties(productDto, product);
         productService.saveProduct(product);
