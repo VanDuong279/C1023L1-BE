@@ -80,9 +80,10 @@ public class OrderService {
         dto.setTableName(order.getTable().getCode());
         dto.setDayCreate(orderDetails.get(0).getDayCreate()); // Sử dụng dayCreate từ OrderDetails
         dto.setTotalMoneyOrder(totalMoneyOrder); // Tổng tiền từ OrderDetails
-        dto.setCreatorName(order.getUser().getFullName());
+        if (!orderDetails.isEmpty()) {
+            dto.setCreatorName(orderDetails.get(0).getUser().getFullName()); // Lấy từ User trong OrderDetails
+        }
         dto.setQuantily(totalQuantity); // Tổng số lượng từ OrderDetails
-
         // Thêm thông tin chi tiết sản phẩm
         List<String> productDetails = orderDetails.stream()
                 .map(detail -> detail.getProduct().getProductName() + " x " +

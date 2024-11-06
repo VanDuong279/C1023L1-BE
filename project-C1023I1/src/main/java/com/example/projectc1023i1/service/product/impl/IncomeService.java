@@ -115,6 +115,81 @@ public class IncomeService {
                 .collect(Collectors.toList());
     }
 
+        // Phương thức tính toán thu nhập theo khoảng thời gian từ ngày đến ngày
+        public List<IncomeDTO> getIncomeByRange(LocalDateTime fromDate, LocalDateTime toDate) {
+            // Lấy khoảng thời gian theo số ngày chênh lệch giữa từ ngày và đến ngày
+            long daysDifference = java.time.Duration.between(fromDate, toDate).toDays();
+
+            List<Object[]> results;
+            if (daysDifference == 0) {
+                // Thống kê theo giờ nếu cùng một ngày
+                results = orderRepository.getIncomeByRange(fromDate, toDate);
+                return mapIncomeResultsHour(results);
+            } else if (daysDifference >= 2 && daysDifference <= 31) {
+                // Thống kê theo ngày nếu khoảng cách từ 2 đến 31 ngày
+                results = orderRepository.getIncomeByRange(fromDate, toDate);
+                return mapIncomeResults(results);
+            } else if (daysDifference >= 32 && daysDifference <= 366) {
+                // Thống kê theo tháng nếu khoảng cách từ 32 đến 366 ngày
+                results = orderRepository.getIncomeByRange(fromDate, toDate);
+                return mapIncomeResultsByMonth(results);
+            } else {
+                // Thống kê theo năm nếu khoảng cách trên 366 ngày
+                results = orderRepository.getIncomeByRange(fromDate, toDate);
+                return mapIncomeResultsByYear(results);
+            }
+        }
+
+        // Phương thức để map kết quả thống kê theo tháng
+        public List<IncomeDTO> mapIncomeResultsByMonth(List<Object[]> results) {
+            return results.stream()
+                    .map(record -> {
+                        Integer month = (record[0] instanceof Number) ? ((Number) record[0]).intValue() : null;
+                        if (month == null || month < 1 || month > 12) {
+                            System.out.println("Invalid month value: " + month);
+                            return null;
+                        }
+
+                        Double totalIncome = (record[1] instanceof Number) ? ((Number) record[1]).doubleValue() : null;
+                        if (totalIncome == null) {
+                            System.out.println("Invalid total income value: null or not a number");
+                            return null;
+                        }
+
+                        return new IncomeDTO(
+                                LocalDateTime.of(LocalDate.now().withMonth(month).withDayOfMonth(1), LocalTime.MIDNIGHT),
+                                totalIncome
+                        );
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        }
+
+        // Phương thức để map kết quả thống kê theo năm
+        public List<IncomeDTO> mapIncomeResultsByYear(List<Object[]> results) {
+            return results.stream()
+                    .map(record -> {
+                        Integer year = (record[0] instanceof Number) ? ((Number) record[0]).intValue() : null;
+                        if (year == null) {
+                            System.out.println("Invalid year value: " + year);
+                            return null;
+                        }
+
+                        Double totalIncome = (record[1] instanceof Number) ? ((Number) record[1]).doubleValue() : null;
+                        if (totalIncome == null) {
+                            System.out.println("Invalid total income value: null or not a number");
+                            return null;
+                        }
+
+                        return new IncomeDTO(
+                                LocalDateTime.of(LocalDate.of(year, 1, 1), LocalTime.MIDNIGHT),
+                                totalIncome
+                        );
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        }
+
 
 
     public List<IncomeDTO> getIncomeByHourToday() {
