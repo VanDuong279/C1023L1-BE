@@ -17,4 +17,5 @@ public interface IProductService {
     void saveProduct(Product product);
     void deleteProduct(int id);
     boolean existProductName(String productName);
+    String generateNextProductCode();
 }

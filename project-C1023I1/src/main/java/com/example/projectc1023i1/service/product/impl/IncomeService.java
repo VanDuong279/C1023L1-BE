@@ -85,10 +85,41 @@ public class IncomeService {
                 .filter(Objects::nonNull) // Bỏ qua các bản ghi null
                 .collect(Collectors.toList());
     }
+    public List<IncomeDTO> mapIncomeResultsHour(List<Object[]> results) {
+        return results.stream()
+                .map(record -> {
+                    // Kiểm tra giá trị của record[0] trước khi chuyển đổi
+                    System.out.println("Received record: " + Arrays.toString(record));
+
+                    // Lấy giá trị giờ từ record[0] và kiểm tra giới hạn giờ
+                    Integer hour = (record[0] instanceof Number) ? ((Number) record[0]).intValue() : null;
+                    if (hour == null || hour < 0 || hour > 23) { // Giới hạn giờ từ 0 đến 23
+                        System.out.println("Invalid or out-of-range hour value: " + hour);
+                        return null; // Bỏ qua bản ghi không hợp lệ
+                    }
+
+                    // Kiểm tra và chuyển đổi record[1] thành totalIncome nếu hợp lệ
+                    Double totalIncome = (record[1] instanceof Number) ? ((Number) record[1]).doubleValue() : null;
+                    if (totalIncome == null) {
+                        System.out.println("Invalid total income value: null or not a number");
+                        return null; // Bỏ qua bản ghi không hợp lệ
+                    }
+
+                    // Sử dụng LocalDateTime với giờ lấy từ record[0]
+                    return new IncomeDTO(
+                            LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, 0)),
+                            totalIncome
+                    );
+                })
+                .filter(Objects::nonNull) // Bỏ qua các bản ghi null
+                .collect(Collectors.toList());
+    }
+
+
 
     public List<IncomeDTO> getIncomeByHourToday() {
         List<Object[]> results = orderRepository.getIncomeByHourToday();
-        return mapIncomeResults(results);
+        return mapIncomeResultsHour(results);
     }
 
     public List<IncomeDTO> getIncomeByDayInMonth() {
